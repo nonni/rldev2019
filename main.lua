@@ -1,9 +1,11 @@
 terminal = require 'BearLibTerminal'
 Object = require 'lib/classic/classic'
 require 'src/Global'
+require 'src/Utils'
 
 InputHandler = require 'src/InputHandler'
 RenderFunctions = require 'src/RenderFunctions'
+require 'src/Rect'
 require 'src/Entity'
 require 'src/Tile'
 require 'src/GameMap'
@@ -18,6 +20,9 @@ function Game.init()
 	Game.screenHeight = 50
 	Game.mapWidth = 80
 	Game.mapHeight = 45
+	Game.roomMaxSize = 10
+	Game.roomMinSize = 6
+	Game.maxRooms = 30
 
 	Game.player = Entity(
 		math.floor(Game.screenWidth / 2),
@@ -34,6 +39,7 @@ function Game.init()
 	)
 
 	Game.gameMap = GameMap(Game.mapWidth, Game.mapHeight)
+	Game.gameMap:makeMap(Game.maxRooms, Game.roomMinSize, Game.roomMaxSize, Game.mapWidth, Game.mapHeight, Game.player)
 
 	Game.entities = {Game.player, Game.npc}
 
