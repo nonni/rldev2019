@@ -2,6 +2,7 @@ RenderFunctions = {}
 
 function RenderFunctions.renderAll(entities, gameMap, fovMap, screenWidth, screenHeight)
     -- Draw all the tiles in the game map
+    terminal.layer(0)
     for y = 1, gameMap.height do
         for x = 1, gameMap.width do
             local wall = gameMap.tiles[y][x].blocked
@@ -27,6 +28,7 @@ function RenderFunctions.renderAll(entities, gameMap, fovMap, screenWidth, scree
         end
     end
 
+    terminal.layer(1)
     -- Draw all entities in the list
     for _, v in ipairs(entities) do
         RenderFunctions.drawEntity(v, fovMap)
@@ -34,6 +36,7 @@ function RenderFunctions.renderAll(entities, gameMap, fovMap, screenWidth, scree
 end
 
 function RenderFunctions.clearAll(entities)
+    terminal.layer(1)
     for _, v in ipairs(entities) do
         RenderFunctions.clearEntity(v)
     end

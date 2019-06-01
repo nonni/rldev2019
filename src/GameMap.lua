@@ -18,7 +18,7 @@ function GameMap:initializeTiles()
     return tiles
 end
 
-function GameMap:makeMap(maxRooms, roomMinSize, roomMaxSize, mapWidth, mapHeight, player)
+function GameMap:makeMap(maxRooms, roomMinSize, roomMaxSize, mapWidth, mapHeight, player, entities, maxMonstersPerRoom)
     local rooms = {}
     local numRooms = 0
 
@@ -69,6 +69,8 @@ function GameMap:makeMap(maxRooms, roomMinSize, roomMaxSize, mapWidth, mapHeight
                 end
             end
 
+            self:placeEntities(newRoom, entities, maxMonstersPerRoom)
+
             numRooms = numRooms + 1
             rooms[numRooms] = newRoom
         end
@@ -98,6 +100,36 @@ function GameMap:createVTunnel(y1, y2, x)
     for y = math.min(y1, y2), math.max(y1, y2) do
         self.tiles[y][x].blocked = false
         self.tiles[y][x].blockSight = false
+    end
+end
+
+function GameMap:placeEntities(room, entities, maxMonstersPerRoom)
+    -- Get a random number of monsters
+    numberOfMonsters = randInt(0, maxMonstersPerRoom)
+
+    for i = 1, numberOfMonsters do
+        -- Choose a random location
+        local x = randInt(room.x1 + 1, room.x2 - 1)
+        local y = randInt(room.y1 + 1, room.y2 - 1)
+
+        local collision = false
+        for _, v in ipairs(entities) do
+            if v.x == x and v.y == y then
+                collision = true
+                break
+            end
+        end
+
+        if not collision then
+            local monster
+            if randInt(0, 100) < 80 then
+                monster = Entity(x, y, 'o', 'light green', 'Orc', true)
+            else
+                monster = Entity(x, y, 'T', 'green', 'Troll', true)
+            end
+
+            entities[#entities+1] = monster
+        end
     end
 end
 
