@@ -1,17 +1,41 @@
 terminal = require 'BearLibTerminal'
-InputHandler = require 'src/input_handlers'
---ROT = require 'lib/rotLove/rot'
+Object = require 'lib/classic/classic'
+require 'src/Global'
+
+InputHandler = require 'src/InputHandler'
+RenderFunctions = require 'src/RenderFunctions'
+require 'src/Entity'
+require 'src/Tile'
+require 'src/GameMap'
+
 
 Game = {}
 
 function Game.init()
 	-- Initialize the library
 	Game.quit = false
-	Game.screen_width = 80
-	Game.screen_height = 50
+	Game.screenWidth = 80
+	Game.screenHeight = 50
+	Game.mapWidth = 80
+	Game.mapHeight = 45
 
-	Game.player_x = math.floor(Game.screen_width / 2)
-	Game.player_y = math.floor(Game.screen_height / 2)
+	Game.player = Entity(
+		math.floor(Game.screenWidth / 2),
+		math.floor(Game.screenHeight / 2),
+		'@',
+		'white'
+	)
+
+	Game.npc = Entity(
+		math.floor(Game.screenWidth / 2) - 5,
+		math.floor(Game.screenHeight / 2),
+		'@',
+		'249,215,28'
+	)
+
+	Game.gameMap = GameMap(Game.mapWidth, Game.mapHeight)
+
+	Game.entities = {Game.player, Game.npc}
 
 	terminal.open()
 	terminal.set("window: size=80x50; font: img/Talryth-square-15x15.png, size=15x15, codepage=437");
@@ -31,8 +55,9 @@ function Game.gameloop()
 			local action = InputHandler.handleKeys(terminal.read())
 			if action then
 				if action[1] == 'move' then
-					Game.player_x = Game.player_x + action[2][1]
-					Game.player_y = Game.player_y + action[2][2]
+					if not Game.gameMap:isBlocked(Game.player.x + action[2][1], Game.player.y + action[2][2]) then
+						Game.player:move(action[2][1], action[2][2])
+					end
 				elseif action[1] == 'exit' then
 					Game.quit = true
 					break
@@ -60,9 +85,9 @@ end
 
 function Game.draw()
 	-- Print something
-	terminal.print(Game.player_x, Game.player_y, '@')
+	RenderFunctions.renderAll(Game.entities, Game.gameMap, Game.screenWidth, Game.screenHeight)
 	terminal.refresh()
-	terminal.print(Game.player_x, Game.player_y, ' ')
+	RenderFunctions.clearAll(Game.entities)
 end
 
 function Game.cleanup()
