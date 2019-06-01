@@ -8,4 +8,5 @@ function Tile:new(blocked, blockSight)
 
     -- By default, if a tile is blocked, it also blocks sight
     self.blockSight = blockSight or blocked
+    self.explored = false
 end

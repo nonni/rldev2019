@@ -8,5 +8,8 @@ globals = {
     'PALETTE', 
     'GameMap', 
     'Rect',
-    'randInt'
+    'randInt',
+    'ROT',
+    'Game',
+    'FOVFunctions'
 }

@@ -1,15 +1,27 @@
 RenderFunctions = {}
 
-function RenderFunctions.renderAll(entities, gameMap, screenWidth, screenHeight)
+function RenderFunctions.renderAll(entities, gameMap, fovMap, screenWidth, screenHeight)
     -- Draw all the tiles in the game map
     for y = 1, gameMap.height do
         for x = 1, gameMap.width do
             local wall = gameMap.tiles[y][x].blocked
             if wall then
-                terminal.bkcolor(PALETTE['dark_wall'])
+                if fovMap[x..','..y] then
+                    terminal.bkcolor(PALETTE['light_wall'])
+                    gameMap.tiles[y][x].explored = true
+                else
+                    terminal.bkcolor(PALETTE['dark_wall'])
+                end
                 terminal.print(x-1, y-1, ' ')
             else
-                terminal.bkcolor(PALETTE['dark_ground'])
+                if fovMap[x..','..y] then
+                    terminal.bkcolor(PALETTE['light_ground'])
+                    gameMap.tiles[y][x].explored = true
+                elseif gameMap.tiles[y][x].explored then
+                    terminal.bkcolor(PALETTE['dark_ground'])
+                else
+                    terminal.bkcolor(PALETTE['dark_wall'])
+                end
                 terminal.print(x-1, y-1, ' ')
             end
         end
@@ -17,7 +29,7 @@ function RenderFunctions.renderAll(entities, gameMap, screenWidth, screenHeight)
 
     -- Draw all entities in the list
     for _, v in ipairs(entities) do
-        RenderFunctions.drawEntity(v)
+        RenderFunctions.drawEntity(v, fovMap)
     end
 end
 
@@ -27,9 +39,11 @@ function RenderFunctions.clearAll(entities)
     end
 end
 
-function RenderFunctions.drawEntity(entity)
-    terminal.color(entity.color)
-    terminal.print(entity.x - 1, entity.y - 1, entity.char)
+function RenderFunctions.drawEntity(entity, fovMap)
+    if fovMap[entity.x..','..entity.y] then
+        terminal.color(entity.color)
+        terminal.print(entity.x - 1, entity.y - 1, entity.char)
+    end
 end
 
 function RenderFunctions.clearEntity(entity)

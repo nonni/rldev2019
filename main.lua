@@ -1,8 +1,10 @@
 terminal = require 'BearLibTerminal'
+ROT = require 'lib/rotLove/rot'
 Object = require 'lib/classic/classic'
 require 'src/Global'
 require 'src/Utils'
 
+FOVFunctions = require 'src/FOVFunctions'
 InputHandler = require 'src/InputHandler'
 RenderFunctions = require 'src/RenderFunctions'
 require 'src/Rect'
@@ -18,6 +20,7 @@ function Game.init()
 	Game.quit = false
 	Game.screenWidth = 80
 	Game.screenHeight = 50
+
 	Game.mapWidth = 80
 	Game.mapHeight = 45
 	Game.roomMaxSize = 10
@@ -38,8 +41,15 @@ function Game.init()
 		'249,215,28'
 	)
 
+	-- Map stuff
 	Game.gameMap = GameMap(Game.mapWidth, Game.mapHeight)
 	Game.gameMap:makeMap(Game.maxRooms, Game.roomMinSize, Game.roomMaxSize, Game.mapWidth, Game.mapHeight, Game.player)
+
+	-- FOV stuff
+	Game.fovAlgorithm = ROT.FOV.Bresenham:new(FOVFunctions.lightCallback)
+	Game.fovRadius = 5
+	Game.fovMap = {}
+	Game.fovRecompute = true
 
 	Game.entities = {Game.player, Game.npc}
 
@@ -63,6 +73,7 @@ function Game.gameloop()
 				if action[1] == 'move' then
 					if not Game.gameMap:isBlocked(Game.player.x + action[2][1], Game.player.y + action[2][2]) then
 						Game.player:move(action[2][1], action[2][2])
+						Game.fovRecompute = true
 					end
 				elseif action[1] == 'exit' then
 					Game.quit = true
@@ -86,12 +97,17 @@ function Game.gameloop()
 end
 
 function Game.update()
-
+	if Game.fovRecompute then
+		-- Recompute FOV.
+		Game.fovMap = {}
+		Game.fovAlgorithm:compute(Game.player.x, Game.player.y, Game.fovRadius, FOVFunctions.computeCallback)
+		Game.fovRecompute = false
+	end
 end
 
 function Game.draw()
 	-- Print something
-	RenderFunctions.renderAll(Game.entities, Game.gameMap, Game.screenWidth, Game.screenHeight)
+	RenderFunctions.renderAll(Game.entities, Game.gameMap, Game.fovMap, Game.screenWidth, Game.screenHeight)
 	terminal.refresh()
 	RenderFunctions.clearAll(Game.entities)
 end
