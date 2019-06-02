@@ -7,6 +7,7 @@ require 'src/Utils'
 FOVFunctions = require 'src/FOVFunctions'
 InputHandler = require 'src/InputHandler'
 RenderFunctions = require 'src/RenderFunctions'
+DeathFunctions = require 'src/DeathFunctions'
 require 'src/components/Fighter'
 require 'src/components/ai'
 require 'src/Rect'
@@ -31,7 +32,8 @@ function Game.init()
 
 	Game.STATES = {
 		PLAYERS_TURN = 1,
-		ENEMY_TURN = 2
+		ENEMY_TURN = 2,
+		PLAYER_DEAD = 3
 	}
 
 	Game.state = Game.STATES.PLAYERS_TURN
@@ -120,7 +122,14 @@ function Game.gameloop()
 					if v[1] == 'message' then
 						print(v[2])
 					elseif v[1] == 'dead' then
-
+						if v[2].id == Game.player.id then
+							local res = DeathFunctions.killPlayer(v[2])
+							print (res[1])
+							Game.state = res[2]
+						else
+							local res = DeathFunctions.killMonster(v[2])
+							print(res)
+						end
 					end
 				end
 			end
@@ -151,13 +160,27 @@ function Game.update()
 						if v[1] == 'message' then
 							print(v[2])
 						elseif v[1] == 'dead' then
-							
+							if v[2].id == Game.player.id then
+								local res = DeathFunctions.killPlayer(v[2])
+								print (res[1])
+								Game.state = res[2]
+							else
+								local res = DeathFunctions.killMonster(v[2])
+								print(res)
+							end
 						end
 					end
 				end
 			end
+
+			if Game.state == Game.STATES.PLAYER_DEAD then
+				break
+			end
 		end
-		Game.state = Game.STATES.PLAYERS_TURN
+
+		if Game.state  ~= Game.STATES.PLAYER_DEAD then
+			Game.state = Game.STATES.PLAYERS_TURN
+		end
 	end
 end
 

@@ -15,5 +15,6 @@ globals = {
     'Fighter',
     'BasicMonster',
     'round',
-    'UUID'
+    'UUID',
+    'DeathFunctions'
 }
