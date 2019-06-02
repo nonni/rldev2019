@@ -86,13 +86,18 @@ function Game.gameloop()
 		while(terminal.has_input()) do
 			local action = InputHandler.handleKeys(terminal.read())
 			if action then
+				local playerTurnResults = {}
+
 				if action[1] == 'move' and Game.state == Game.STATES.PLAYERS_TURN then
 					local destX = Game.player.x + action[2][1]
 					local destY = Game.player.y + action[2][2]
 					if not Game.gameMap:isBlocked(destX, destY) then
 						local target = Entity.getBlockingEntitiesAtLocation(Game.entities, destX, destY)
 						if target then
-							print('You kick the ' .. target.name .. 'in the shins, much to its annoyance!')
+							local attackResults = Game.player.fighter:attack(target)
+							for _,v in ipairs(attackResults) do
+								playerTurnResults[#playerTurnResults+1] = v
+							end
 						else
 							Game.player:move(action[2][1], action[2][2])
 							Game.fovRecompute = true
@@ -108,6 +113,14 @@ function Game.gameloop()
 						terminal.set('window: fullscreen=false')
 					else
 						terminal.set('window: fullscreen=false')
+					end
+				end
+
+				for _,v in ipairs(playerTurnResults) do
+					if v[1] == 'message' then
+						print(v[2])
+					elseif v[1] == 'dead' then
+
 					end
 				end
 			end
@@ -133,7 +146,14 @@ function Game.update()
 		for _, v in ipairs(Game.entities) do
 			if v.name ~= 'Player' then
 				if v.ai then
-					v.ai:takeTurn(Game.player, Game.fovMap, Game.gameMap, Game.entities)
+					local enemyTurnResults = v.ai:takeTurn(Game.player, Game.fovMap, Game.gameMap, Game.entities)
+					for _,v in ipairs(enemyTurnResults) do
+						if v[1] == 'message' then
+							print(v[2])
+						elseif v[1] == 'dead' then
+							
+						end
+					end
 				end
 			end
 		end
