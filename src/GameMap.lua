@@ -152,7 +152,7 @@ function GameMap:placeEntities(room, entities, maxMonstersPerRoom)
 end
 
 function GameMap:isBlocked(x, y)
-    if self.tiles[y][x].blocked then
+    if self.tiles[y] and self.tiles[y][x] and self.tiles[y][x].blocked then
         return true
     end
     return false

@@ -14,5 +14,6 @@ globals = {
     'FOVFunctions',
     'Fighter',
     'BasicMonster',
-    'round'
+    'round',
+    'UUID'
 }
