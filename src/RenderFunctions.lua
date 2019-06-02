@@ -1,6 +1,6 @@
 RenderFunctions = {}
 
-function RenderFunctions.renderAll(entities, gameMap, fovMap, screenWidth, screenHeight)
+function RenderFunctions.renderAll(entities, player, gameMap, fovMap, screenWidth, screenHeight)
     -- Draw all the tiles in the game map
     terminal.layer(0)
     for y = 1, gameMap.height do
@@ -29,10 +29,20 @@ function RenderFunctions.renderAll(entities, gameMap, fovMap, screenWidth, scree
     end
 
     terminal.layer(1)
+    -- Sort list by render order
+    table.sort(entities, function (a,b) 
+        if a.renderOrder == b.renderOrder then return a.createTime < b.createTime
+        else return a.renderOrder < b.renderOrder end
+    end)
     -- Draw all entities in the list
     for _, v in ipairs(entities) do
         RenderFunctions.drawEntity(v, fovMap)
     end
+
+    terminal.layer(2)
+    -- Draw UI
+    terminal.color('white')
+    terminal.print(1, screenHeight-2, string.format('HP: %02d/%02d', player.fighter.hp, player.fighter.maxHp))
 end
 
 function RenderFunctions.clearAll(entities)

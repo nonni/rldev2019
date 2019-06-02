@@ -1,6 +1,6 @@
 Entity = Object:extend()
 
-function Entity:new(x, y, char, color, name, blocks, fighter, ai, opts)
+function Entity:new(x, y, char, color, name, blocks, renderOrder, fighter, ai, opts)
     local iopts = opts or {}
     if iopts then for k, v in pairs(iopts) do self[k] = v end end
 
@@ -12,6 +12,8 @@ function Entity:new(x, y, char, color, name, blocks, fighter, ai, opts)
     self.fighter = fighter
     self.ai = ai
     self.id = UUID()
+    self.createTime = os.clock()
+    self.renderOrder = renderOrder or Enums.RenderOrder.Actor
 
     if self.fighter then
         self.fighter.owner = self

@@ -130,6 +130,7 @@ function GameMap:placeEntities(room, entities, maxMonstersPerRoom)
                     'light green',
                     'Orc',
                     true,
+                    Enums.RenderOrder.ACTOR,
                     Fighter(10, 0, 3),
                     BasicMonster()
                 )
@@ -141,6 +142,7 @@ function GameMap:placeEntities(room, entities, maxMonstersPerRoom)
                     'green',
                     'Troll',
                     true,
+                    Enums.RenderOrder.ACTOR,
                     Fighter(16, 1, 4),
                     BasicMonster()
                 )

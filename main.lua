@@ -4,6 +4,7 @@ Object = require 'lib/classic/classic'
 require 'src/Global'
 require 'src/Utils'
 
+Enums = require 'src/Enums'
 FOVFunctions = require 'src/FOVFunctions'
 InputHandler = require 'src/InputHandler'
 RenderFunctions = require 'src/RenderFunctions'
@@ -30,13 +31,7 @@ function Game.init()
 	Game.roomMinSize = 6
 	Game.maxRooms = 30
 
-	Game.STATES = {
-		PLAYERS_TURN = 1,
-		ENEMY_TURN = 2,
-		PLAYER_DEAD = 3
-	}
-
-	Game.state = Game.STATES.PLAYERS_TURN
+	Game.state = Enums.States.PLAYERS_TURN
 
 	Game.player = Entity(
 		math.floor(Game.screenWidth / 2),
@@ -45,6 +40,7 @@ function Game.init()
 		'white',
 		'Player',
 		true,
+		Enums.RenderOrder.ACTOR,
 		Fighter(30, 2, 5)
 	)
 
@@ -90,7 +86,7 @@ function Game.gameloop()
 			if action then
 				local playerTurnResults = {}
 
-				if action[1] == 'move' and Game.state == Game.STATES.PLAYERS_TURN then
+				if action[1] == 'move' and Game.state == Enums.States.PLAYERS_TURN then
 					local destX = Game.player.x + action[2][1]
 					local destY = Game.player.y + action[2][2]
 					if not Game.gameMap:isBlocked(destX, destY) then
@@ -105,7 +101,7 @@ function Game.gameloop()
 							Game.fovRecompute = true
 						end
 
-						Game.state = Game.STATES.ENEMY_TURN
+						Game.state = Enums.States.ENEMY_TURN
 					end
 				elseif action[1] == 'exit' then
 					Game.quit = true
@@ -151,7 +147,7 @@ function Game.update()
 		Game.fovRecompute = false
 	end
 
-	if Game.state == Game.STATES.ENEMY_TURN then
+	if Game.state == Enums.States.ENEMY_TURN then
 		for _, v in ipairs(Game.entities) do
 			if v.name ~= 'Player' then
 				if v.ai then
@@ -173,20 +169,20 @@ function Game.update()
 				end
 			end
 
-			if Game.state == Game.STATES.PLAYER_DEAD then
+			if Game.state == Enums.States.PLAYER_DEAD then
 				break
 			end
 		end
 
-		if Game.state  ~= Game.STATES.PLAYER_DEAD then
-			Game.state = Game.STATES.PLAYERS_TURN
+		if Game.state  ~= Enums.States.PLAYER_DEAD then
+			Game.state = Enums.States.PLAYERS_TURN
 		end
 	end
 end
 
 function Game.draw()
 	-- Print something
-	RenderFunctions.renderAll(Game.entities, Game.gameMap, Game.fovMap, Game.screenWidth, Game.screenHeight)
+	RenderFunctions.renderAll(Game.entities, Game.player, Game.gameMap, Game.fovMap, Game.screenWidth, Game.screenHeight)
 	terminal.refresh()
 	RenderFunctions.clearAll(Game.entities)
 end

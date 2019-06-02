@@ -16,5 +16,6 @@ globals = {
     'BasicMonster',
     'round',
     'UUID',
-    'DeathFunctions'
+    'DeathFunctions',
+    'Enums'
 }

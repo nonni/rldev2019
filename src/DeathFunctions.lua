@@ -4,7 +4,7 @@ function DeathFunctions.killPlayer(player)
     player.char = '%'
     player.color = 'dark red'
 
-    return {'You died!', Game.STATES.PLAYER_DEAD}
+    return {'You died!', Enums.States.PLAYER_DEAD}
 end
 
 function DeathFunctions.killMonster(monster)
@@ -16,6 +16,7 @@ function DeathFunctions.killMonster(monster)
     monster.fighter = nil
     monster.ai = nil
     monster.name = string.format('remains of %s', monster.name)
+    monster.renderOrder = Enums.RenderOrder.CORPSE
 
     return deathMessage
 end
