@@ -105,9 +105,9 @@ end
 
 function GameMap:placeEntities(room, entities, maxMonstersPerRoom)
     -- Get a random number of monsters
-    numberOfMonsters = randInt(0, maxMonstersPerRoom)
+    local numberOfMonsters = randInt(0, maxMonstersPerRoom)
 
-    for i = 1, numberOfMonsters do
+    for _ = 1, numberOfMonsters do
         -- Choose a random location
         local x = randInt(room.x1 + 1, room.x2 - 1)
         local y = randInt(room.y1 + 1, room.y2 - 1)
@@ -123,9 +123,27 @@ function GameMap:placeEntities(room, entities, maxMonstersPerRoom)
         if not collision then
             local monster
             if randInt(0, 100) < 80 then
-                monster = Entity(x, y, 'o', 'light green', 'Orc', true)
+                monster = Entity(
+                    x,
+                    y,
+                    'o',
+                    'light green',
+                    'Orc',
+                    true,
+                    Fighter(10, 0, 3),
+                    BasicMonster()
+                )
             else
-                monster = Entity(x, y, 'T', 'green', 'Troll', true)
+                monster = Entity(
+                    x,
+                    y,
+                    'T',
+                    'green',
+                    'Troll',
+                    true,
+                    Fighter(16, 1, 4),
+                    BasicMonster()
+                )
             end
 
             entities[#entities+1] = monster

@@ -11,5 +11,8 @@ globals = {
     'randInt',
     'ROT',
     'Game',
-    'FOVFunctions'
+    'FOVFunctions',
+    'Fighter',
+    'BasicMonster',
+    'round'
 }

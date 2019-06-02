@@ -7,6 +7,8 @@ require 'src/Utils'
 FOVFunctions = require 'src/FOVFunctions'
 InputHandler = require 'src/InputHandler'
 RenderFunctions = require 'src/RenderFunctions'
+require 'src/components/Fighter'
+require 'src/components/ai'
 require 'src/Rect'
 require 'src/Entity'
 require 'src/Tile'
@@ -40,7 +42,8 @@ function Game.init()
 		'@',
 		'white',
 		'Player',
-		true
+		true,
+		Fighter(30, 2, 5)
 	)
 
 	Game.maxMonstersPerRoom = 3
@@ -49,7 +52,16 @@ function Game.init()
 
 	-- Map stuff
 	Game.gameMap = GameMap(Game.mapWidth, Game.mapHeight)
-	Game.gameMap:makeMap(Game.maxRooms, Game.roomMinSize, Game.roomMaxSize, Game.mapWidth, Game.mapHeight, Game.player, Game.entities, Game.maxMonstersPerRoom)
+	Game.gameMap:makeMap(
+		Game.maxRooms,
+		Game.roomMinSize,
+		Game.roomMaxSize,
+		Game.mapWidth,
+		Game.mapHeight,
+		Game.player,
+		Game.entities,
+		Game.maxMonstersPerRoom
+	)
 
 	-- FOV stuff
 	Game.fovAlgorithm = ROT.FOV.Bresenham:new(FOVFunctions.lightCallback)
@@ -120,10 +132,12 @@ function Game.update()
 	if Game.state == Game.STATES.ENEMY_TURN then
 		for _, v in ipairs(Game.entities) do
 			if v.name ~= 'Player' then
-				print('The ' .. v.name .. ' ponders the meaning of its existence')
-				Game.state = Game.STATES.PLAYERS_TURN
+				if v.ai then
+					v.ai:takeTurn(Game.player, Game.fovMap, Game.gameMap, Game.entities)
+				end
 			end
 		end
+		Game.state = Game.STATES.PLAYERS_TURN
 	end
 end
 
