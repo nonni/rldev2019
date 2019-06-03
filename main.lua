@@ -26,10 +26,14 @@ function Game.init()
 	Game.screenHeight = 50
 
 	Game.mapWidth = 80
-	Game.mapHeight = 45
+	Game.mapHeight = 43
 	Game.roomMaxSize = 10
 	Game.roomMinSize = 6
 	Game.maxRooms = 30
+
+	Game.uiBarWidth = 20
+	Game.uiPanelHeight = 7
+	Game.uiPanelY = Game.screenHeight - Game.uiPanelHeight
 
 	Game.state = Enums.States.PLAYERS_TURN
 

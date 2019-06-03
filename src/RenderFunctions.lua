@@ -1,5 +1,20 @@
 RenderFunctions = {}
 
+function RenderFunctions.renderBar(x, y, totalWidth, name, value, maximum, barColor, backColor, layer)
+    local barWidth = math.ceil(value / maximum * totalWidth)
+
+    terminal.layer(layer)
+    -- Panel background.
+    terminal.print(x, y, string.format('[color=%s]%s', backColor, string.rep('▒', totalWidth)))
+    -- Panel fill
+    terminal.print(x, y, string.format('[color=%s]%s', barColor, string.rep('█', barWidth)))
+    -- Panel text
+    terminal.layer(layer+1)
+    local text = string.format('[color=white]%s: %d/%d', name, value, maximum)
+    terminal.clear_area(math.floor(x + totalWidth / 2), y, #text, 1)
+    terminal.print(math.floor(x + totalWidth / 2), y, text)
+end
+
 function RenderFunctions.renderAll(entities, player, gameMap, fovMap, screenWidth, screenHeight)
     -- Draw all the tiles in the game map
     terminal.layer(0)
@@ -41,8 +56,7 @@ function RenderFunctions.renderAll(entities, player, gameMap, fovMap, screenWidt
 
     terminal.layer(2)
     -- Draw UI
-    terminal.color('white')
-    terminal.print(1, screenHeight-2, string.format('HP: %02d/%02d', player.fighter.hp, player.fighter.maxHp))
+    RenderFunctions.renderBar(1, 1, Game.uiBarWidth, 'HP', player.fighter.hp, player.fighter.maxHp, 'light red', 'dark red', 2)
 end
 
 function RenderFunctions.clearAll(entities)
