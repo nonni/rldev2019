@@ -81,6 +81,7 @@ function Game.init()
 
 	terminal.open()
 	terminal.set("window: size=80x50; font: img/Talryth-square-15x15.png, size=15x15, codepage=437");
+	terminal.set("input: filter=[keyboard,mouse]")
 end
 
 function Game.gameloop()
