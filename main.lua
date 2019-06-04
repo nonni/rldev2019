@@ -9,6 +9,8 @@ FOVFunctions = require 'src/FOVFunctions'
 InputHandler = require 'src/InputHandler'
 RenderFunctions = require 'src/RenderFunctions'
 DeathFunctions = require 'src/DeathFunctions'
+require 'src/Message'
+require 'src/MessageLog'
 require 'src/components/Fighter'
 require 'src/components/ai'
 require 'src/Rect'
@@ -34,6 +36,12 @@ function Game.init()
 	Game.uiBarWidth = 20
 	Game.uiPanelHeight = 7
 	Game.uiPanelY = Game.screenHeight - Game.uiPanelHeight
+
+	Game.uiMessageX = Game.uiBarWidth + 2
+	Game.uiMessageWidth = Game.screenWidth - Game.uiBarWidth - 2
+	Game.uiMessageHeight = Game.uiPanelHeight - 1
+
+	Game.messageLog = MessageLog(Game.uiMessageX, Game.uiMessageWidth, Game.uiMessageHeight)
 
 	Game.state = Enums.States.PLAYERS_TURN
 
@@ -73,11 +81,6 @@ function Game.init()
 
 	terminal.open()
 	terminal.set("window: size=80x50; font: img/Talryth-square-15x15.png, size=15x15, codepage=437");
-	-- m=ROT.Map.Arena:new(50, 20)
-	--function callbak(x,y,val)
-	--    terminal.print(x, y, val == 1 and '#' or '.')
-	--end
-	--m:create(callbak)
 end
 
 function Game.gameloop()
@@ -120,15 +123,15 @@ function Game.gameloop()
 
 				for _,v in ipairs(playerTurnResults) do
 					if v[1] == 'message' then
-						print(v[2])
+						Game.messageLog:addMessage(v[2])
 					elseif v[1] == 'dead' then
 						if v[2].id == Game.player.id then
 							local res = DeathFunctions.killPlayer(v[2])
-							print (res[1])
+							Game.messageLog:addMessage(res[1])
 							Game.state = res[2]
 						else
 							local res = DeathFunctions.killMonster(v[2])
-							print(res)
+							Game.messageLog:addMessage(res)
 						end
 					end
 				end
@@ -158,15 +161,15 @@ function Game.update()
 					local enemyTurnResults = v.ai:takeTurn(Game.player, Game.fovMap, Game.gameMap, Game.entities)
 					for _,v in ipairs(enemyTurnResults) do
 						if v[1] == 'message' then
-							print(v[2])
+							Game.messageLog:addMessage(v[2])
 						elseif v[1] == 'dead' then
 							if v[2].id == Game.player.id then
 								local res = DeathFunctions.killPlayer(v[2])
-								print (res[1])
+								Game.messageLog:addMessage(res[1])
 								Game.state = res[2]
 							else
 								local res = DeathFunctions.killMonster(v[2])
-								print(res)
+								Game.messageLog:addMessage(res)
 							end
 						end
 					end
@@ -186,7 +189,7 @@ end
 
 function Game.draw()
 	-- Print something
-	RenderFunctions.renderAll(Game.entities, Game.player, Game.gameMap, Game.fovMap, Game.screenWidth, Game.screenHeight)
+	RenderFunctions.renderAll(Game.entities, Game.player, Game.gameMap, Game.fovMap, Game.messageLog, Game.screenWidth, Game.screenHeight)
 	terminal.refresh()
 	RenderFunctions.clearAll(Game.entities)
 end

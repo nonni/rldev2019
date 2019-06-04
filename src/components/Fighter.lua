@@ -24,8 +24,10 @@ function Fighter:attack(target)
 
     if damage > 0 then
         results[#results+1] = {
-            'message', 
-            string.format('%s attacks %s for %d hit points', string.upper(self.owner.name), target.name, damage)
+            'message',
+            Message(
+                string.format('%s attacks %s for %d hit points', string.upper(self.owner.name), target.name, damage),
+                'white')
         }
 
         local dmgRes = target.fighter:takeDamage(damage)
@@ -37,8 +39,10 @@ function Fighter:attack(target)
         end
     else
         results[#results+1] = {
-            'message', 
-            string.format('%s attacks %s but does no damage.', string.upper(self.owner.name), target.name)
+            'message',
+            Message(
+                string.format('%s attacks %s but does no damage.', string.upper(self.owner.name), target.name),
+                'white')
         }
     end
 

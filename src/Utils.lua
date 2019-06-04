@@ -16,3 +16,22 @@ function UUID()
     end
     return (("xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx"):gsub("[xy]", fn))
 end
+
+function wrap(str, limit)
+    local lines = {}
+    local lineStart = 1
+
+    if #str > limit + lineStart then
+        local currentStr = string.sub(str, lineStart, limit)
+        while #currentStr == limit do
+            table.insert(lines, currentStr)
+            lineStart = lineStart + limit
+            currentStr = string.sub(str, lineStart, lineStart + limit - 1)
+        end
+        table.insert(lines, currentStr)
+    else
+        table.insert(lines, str)
+    end
+
+    return lines
+end

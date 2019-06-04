@@ -15,7 +15,7 @@ function RenderFunctions.renderBar(x, y, totalWidth, name, value, maximum, barCo
     terminal.print(math.floor(x + totalWidth / 2), y, text)
 end
 
-function RenderFunctions.renderAll(entities, player, gameMap, fovMap, screenWidth, screenHeight)
+function RenderFunctions.renderAll(entities, player, gameMap, fovMap, messageLog, screenWidth, screenHeight)
     -- Draw all the tiles in the game map
     terminal.layer(0)
     for y = 1, gameMap.height do
@@ -57,6 +57,14 @@ function RenderFunctions.renderAll(entities, player, gameMap, fovMap, screenWidt
     terminal.layer(2)
     -- Draw UI
     RenderFunctions.renderBar(1, 1, Game.uiBarWidth, 'HP', player.fighter.hp, player.fighter.maxHp, 'light red', 'dark red', 2)
+
+    -- Print the game messages, one line at a time
+    local y = 1
+    terminal.clear_area(messageLog.x, y, messageLog.width, messageLog.height)
+    for _,message in ipairs(messageLog.messages) do
+        terminal.print(messageLog.x, y, string.format('[color=%s]%s', message.color, message.text))
+        y = y + 1
+    end
 end
 
 function RenderFunctions.clearAll(entities)

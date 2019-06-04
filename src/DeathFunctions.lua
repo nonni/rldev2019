@@ -4,7 +4,7 @@ function DeathFunctions.killPlayer(player)
     player.char = '%'
     player.color = 'dark red'
 
-    return {'You died!', Enums.States.PLAYER_DEAD}
+    return {Message('You died!', 'red'), Enums.States.PLAYER_DEAD}
 end
 
 function DeathFunctions.killMonster(monster)
@@ -18,7 +18,7 @@ function DeathFunctions.killMonster(monster)
     monster.name = string.format('remains of %s', monster.name)
     monster.renderOrder = Enums.RenderOrder.CORPSE
 
-    return deathMessage
+    return Message(deathMessage, 'orange')
 end
 
 return DeathFunctions

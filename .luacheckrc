@@ -17,5 +17,8 @@ globals = {
     'round',
     'UUID',
     'DeathFunctions',
-    'Enums'
+    'Enums',
+    'Message',
+    'MessageLog',
+    'wrap'
 }
