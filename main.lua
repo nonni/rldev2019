@@ -53,12 +53,12 @@ function Game.init()
 		'@',
 		'white',
 		'Player',
-		true,
-		Enums.RenderOrder.ACTOR,
-		Fighter(30, 2, 5),
-		nil,
-		nil,
-		Inventory(26)
+		{
+			blocks = true,
+			renderOrder = Enums.RenderOrder.ACTOR,
+			fighter = Fighter(30, 2, 5),
+			inventory = Inventory(26)
+		}
 	)
 
 	Game.maxMonstersPerRoom = 3

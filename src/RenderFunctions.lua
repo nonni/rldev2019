@@ -56,7 +56,7 @@ function RenderFunctions.renderAll(entities, player, gameMap, fovMap, messageLog
 
     terminal.layer(1)
     -- Sort list by render order
-    table.sort(entities, function (a,b) 
+    table.sort(entities, function (a,b)
         if a.renderOrder == b.renderOrder then return a.createTime < b.createTime
         else return a.renderOrder < b.renderOrder end
     end)

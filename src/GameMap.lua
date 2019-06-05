@@ -130,10 +130,12 @@ function GameMap:placeEntities(room, entities, maxMonstersPerRoom, maxItemsPerRo
                     'o',
                     'light green',
                     'Orc',
-                    true,
-                    Enums.RenderOrder.ACTOR,
-                    Fighter(10, 0, 3),
-                    BasicMonster()
+                    {
+                        blocks = true,
+                        renderOrder = Enums.RenderOrder.ACTOR,
+                        fighter = Fighter(10, 0, 3),
+                        ai = BasicMonster()
+                    }
                 )
             else
                 monster = Entity(
@@ -142,10 +144,12 @@ function GameMap:placeEntities(room, entities, maxMonstersPerRoom, maxItemsPerRo
                     'T',
                     'green',
                     'Troll',
-                    true,
-                    Enums.RenderOrder.ACTOR,
-                    Fighter(16, 1, 4),
-                    BasicMonster()
+                    {
+                        blocks = true,
+                        renderOrder = Enums.RenderOrder.ACTOR,
+                        fighter = Fighter(16, 1, 4),
+                        ai = BasicMonster()
+                    }
                 )
             end
 
@@ -166,7 +170,17 @@ function GameMap:placeEntities(room, entities, maxMonstersPerRoom, maxItemsPerRo
         end
 
         if not collision then
-            local item = Entity(x, y, '!', 'violet', 'Healing potion', false, Enums.RenderOrder.ITEM)
+            local item = Entity(
+                x,
+                y,
+                '!',
+                'violet',
+                'Healing potion',
+                {
+                    renderOrder = Enums.RenderOrder.ITEM,
+                    item = Item()
+                }
+            )
             entities[#entities+1] = item
         end
     end
