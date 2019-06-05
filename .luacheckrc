@@ -20,5 +20,7 @@ globals = {
     'Enums',
     'Message',
     'MessageLog',
-    'wrap'
+    'wrap',
+    'Item',
+    'Inventory'
 }

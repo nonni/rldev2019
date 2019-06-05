@@ -13,6 +13,8 @@ require 'src/Message'
 require 'src/MessageLog'
 require 'src/components/Fighter'
 require 'src/components/ai'
+require 'src/components/Item'
+require 'src/components/Inventory'
 require 'src/Rect'
 require 'src/Entity'
 require 'src/Tile'
@@ -53,10 +55,14 @@ function Game.init()
 		'Player',
 		true,
 		Enums.RenderOrder.ACTOR,
-		Fighter(30, 2, 5)
+		Fighter(30, 2, 5),
+		nil,
+		nil,
+		Inventory(26)
 	)
 
 	Game.maxMonstersPerRoom = 3
+	Game.maxItemsPerRoom = 2
 
 	Game.entities = {Game.player}
 
@@ -70,7 +76,8 @@ function Game.init()
 		Game.mapHeight,
 		Game.player,
 		Game.entities,
-		Game.maxMonstersPerRoom
+		Game.maxMonstersPerRoom,
+		Game.maxItemsPerRoom
 	)
 
 	-- FOV stuff

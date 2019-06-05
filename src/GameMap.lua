@@ -18,7 +18,7 @@ function GameMap:initializeTiles()
     return tiles
 end
 
-function GameMap:makeMap(maxRooms, roomMinSize, roomMaxSize, mapWidth, mapHeight, player, entities, maxMonstersPerRoom)
+function GameMap:makeMap(maxRooms, roomMinSize, roomMaxSize, mapWidth, mapHeight, player, entities, maxMonstersPerRoom, maxItemsPerRoom)
     local rooms = {}
     local numRooms = 0
 
@@ -69,7 +69,7 @@ function GameMap:makeMap(maxRooms, roomMinSize, roomMaxSize, mapWidth, mapHeight
                 end
             end
 
-            self:placeEntities(newRoom, entities, maxMonstersPerRoom)
+            self:placeEntities(newRoom, entities, maxMonstersPerRoom, maxItemsPerRoom)
 
             numRooms = numRooms + 1
             rooms[numRooms] = newRoom
@@ -103,9 +103,10 @@ function GameMap:createVTunnel(y1, y2, x)
     end
 end
 
-function GameMap:placeEntities(room, entities, maxMonstersPerRoom)
+function GameMap:placeEntities(room, entities, maxMonstersPerRoom, maxItemsPerRoom)
     -- Get a random number of monsters
     local numberOfMonsters = randInt(0, maxMonstersPerRoom)
+    local numberOfItems = randInt(0, maxItemsPerRoom)
 
     for _ = 1, numberOfMonsters do
         -- Choose a random location
@@ -149,6 +150,24 @@ function GameMap:placeEntities(room, entities, maxMonstersPerRoom)
             end
 
             entities[#entities+1] = monster
+        end
+    end
+
+    for _ = 1, numberOfItems do
+        local x = randInt(room.x1 + 1, room.x2 - 1)
+        local y = randInt(room.y1 + 1, room.y2 - 1)
+
+        local collision = false
+        for _, v in ipairs(entities) do
+            if v.x == x and v.y == y then
+                collision = true
+                break
+            end
+        end
+
+        if not collision then
+            local item = Entity(x, y, '!', 'violet', 'Healing potion', false, Enums.RenderOrder.ITEM)
+            entities[#entities+1] = item
         end
     end
 end
