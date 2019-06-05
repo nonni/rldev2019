@@ -118,6 +118,20 @@ function Game.gameloop()
 
 						Game.state = Enums.States.ENEMY_TURN
 					end
+				elseif action[1] == 'pickup' and Enums.States.PLAYERS_TURN then
+					local itemFound = false
+					for _,entity in ipairs(Game.entities) do
+						if entity.item and entity.x == Game.player.x and entity.y == Game.player.y then
+							local pickupResults = Game.player.inventory:addItem(entity)
+							itemFound = true
+							for _,v in ipairs(pickupResults) do
+								table.insert(playerTurnResults, v)
+							end
+						end
+					end
+					if not itemFound then
+						Game.messageLog:addMessage(Message('There is nothing here to pick up.', 'yellow'))
+					end
 				elseif action[1] == 'exit' then
 					Game.quit = true
 					break
@@ -141,6 +155,15 @@ function Game.gameloop()
 							local res = DeathFunctions.killMonster(v[2])
 							Game.messageLog:addMessage(res)
 						end
+					elseif v[1] == 'itemAdded' then
+						for i,ent in ipairs(Game.entities) do
+							if ent.id == v[2].id then
+								table.remove(Game.entities, i)
+								break
+							end
+						end
+
+						Game.state = Enums.States.ENEMY_TURN
 					end
 				end
 			end

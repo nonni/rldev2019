@@ -16,6 +16,7 @@ InputHandler.keyActions = {
     [terminal.TK_U] = {'move', {1, -1}},
     [terminal.TK_B] = {'move', {-1, 1}},
     [terminal.TK_N] = {'move', {1, 1}},
+    [terminal.TK_G] = {'pickup', true},
     [terminal.TK_RETURN] = function() return terminal.check(terminal.TK_CONTROL) and {'fullscreen', true} or {} end
 }
 
