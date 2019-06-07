@@ -26,9 +26,9 @@ function RenderFunctions.getNamesUnderMouse(mouseX, mouseY, entities, fovMap)
     return string.sub(string.upper(names), 3)
 end
 
-function RenderFunctions.renderAll(entities, player, gameMap, fovMap, messageLog, screenWidth, screenHeight)
+function RenderFunctions.renderAll(entities, player, gameMap, fovMap, messageLog, screenWidth, screenHeight, gameState)
     -- Draw all the tiles in the game map
-    terminal.layer(0)
+    terminal.layer(Enums.Layers.DUNGEON)
     for y = 1, gameMap.height do
         for x = 1, gameMap.width do
             local wall = gameMap.tiles[y][x].blocked
@@ -54,7 +54,7 @@ function RenderFunctions.renderAll(entities, player, gameMap, fovMap, messageLog
         end
     end
 
-    terminal.layer(1)
+    terminal.layer(Enums.Layers.ENTITIES)
     -- Sort list by render order
     table.sort(entities, function (a,b)
         if a.renderOrder == b.renderOrder then return a.createTime < b.createTime
@@ -65,7 +65,7 @@ function RenderFunctions.renderAll(entities, player, gameMap, fovMap, messageLog
         RenderFunctions.drawEntity(v, fovMap)
     end
 
-    terminal.layer(2)
+    terminal.layer(Enums.Layers.UI)
     -- Draw UI
     RenderFunctions.renderBar(1, 1, Game.uiBarWidth, 'HP', player.fighter.hp, player.fighter.maxHp, 'light red', 'dark red', 2)
 
@@ -85,14 +85,31 @@ function RenderFunctions.renderAll(entities, player, gameMap, fovMap, messageLog
         terminal.print(messageLog.x, y, string.format('[color=%s]%s', message.color, message.text))
         y = y + 1
     end
+
+    -- Display inventory if game state is show inventory.
+    if gameState == Enums.States.SHOW_INVENTORY then
+        Menus.inventoryMenu(Enums.Layers.Inventory, 'Press the key next to an item to use it, or Esc to cancel.', Game.player.inventory, 50, screenWidth, screenHeight)
+    end
+end
+
+function RenderFunctions.clearLayer(layer, x, y, width, height)
+    terminal.clear_area(x, y, width, height)
 end
 
 function RenderFunctions.clearAll(entities)
-    terminal.layer(1)
+    terminal.layer(Enums.Layers.ENTITIES)
     for _, v in ipairs(entities) do
         RenderFunctions.clearEntity(v)
     end
 end
+
+function RenderFunctions.rectangle(layer, color, x, y, w, h)
+    terminal.layer(layer)
+    for curY = 0,h do
+        terminal.print(x, y + curY, string.format('[color=%s]%s', color, string.rep('▒', w)))
+    end
+end
+
 
 function RenderFunctions.drawEntity(entity, fovMap)
     if fovMap[entity.x..','..entity.y] then

@@ -11,6 +11,7 @@ RenderFunctions = require 'src/RenderFunctions'
 DeathFunctions = require 'src/DeathFunctions'
 require 'src/Message'
 require 'src/MessageLog'
+require 'src/Menus'
 require 'src/components/Fighter'
 require 'src/components/ai'
 require 'src/components/Item'
@@ -46,6 +47,7 @@ function Game.init()
 	Game.messageLog = MessageLog(Game.uiMessageX, Game.uiMessageWidth, Game.uiMessageHeight)
 
 	Game.state = Enums.States.PLAYERS_TURN
+	Game.previousState = Game.state
 
 	Game.player = Entity(
 		math.floor(Game.screenWidth / 2),
@@ -132,9 +134,17 @@ function Game.gameloop()
 					if not itemFound then
 						Game.messageLog:addMessage(Message('There is nothing here to pick up.', 'yellow'))
 					end
+				elseif action[1] == 'show_inventory' then
+					Game.previousState = Game.state
+					Game.state = Enums.States.SHOW_INVENTORY
 				elseif action[1] == 'exit' then
-					Game.quit = true
-					break
+					if Game.state == Enums.States.SHOW_INVENTORY then
+						Game.state = Game.previousState
+						RenderFunctions.clearLayer(Enums.Layers.INVENTORY, 0, 0, Game.screenWidth, Game.screenHeight)
+					else
+						Game.quit = true
+						break
+					end
 				elseif action[1] == 'fullscreen' then
 					if terminal.check(terminal.TK_FULLSCREEN) then
 						terminal.set('window: fullscreen=false')
@@ -220,7 +230,7 @@ end
 
 function Game.draw()
 	-- Print something
-	RenderFunctions.renderAll(Game.entities, Game.player, Game.gameMap, Game.fovMap, Game.messageLog, Game.screenWidth, Game.screenHeight)
+	RenderFunctions.renderAll(Game.entities, Game.player, Game.gameMap, Game.fovMap, Game.messageLog, Game.screenWidth, Game.screenHeight, Game.state)
 	terminal.refresh()
 	RenderFunctions.clearAll(Game.entities)
 end
