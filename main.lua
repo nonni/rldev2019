@@ -25,6 +25,9 @@ require 'src/GameMap'
 Game = {}
 
 function Game.init()
+	-- Seed random (os.time OK for now)
+	math.randomseed(os.time())
+
 	-- Initialize the library
 	Game.quit = false
 	Game.screenWidth = 80
@@ -99,7 +102,7 @@ function Game.gameloop()
 	while(not Game.quit) do
 		-- Parse input
 		while(terminal.has_input()) do
-			local action = InputHandler.handleKeys(terminal.read())
+			local action = InputHandler.handleKeys(terminal.read(), Game.state)
 			if action then
 				local playerTurnResults = {}
 
@@ -137,6 +140,15 @@ function Game.gameloop()
 				elseif action[1] == 'show_inventory' then
 					Game.previousState = Game.state
 					Game.state = Enums.States.SHOW_INVENTORY
+				elseif action[1] == 'inventory_index' then
+					if Game.state == Enums.States.SHOW_INVENTORY and
+						Game.previousState ~= Enums.States.PLAYER_DEAD and
+						action[2] and
+						action[2] <= #Game.player.inventory.items
+					then
+						local item = Game.player.inventory.items[action[2]]
+						print(item.name)
+					end
 				elseif action[1] == 'exit' then
 					if Game.state == Enums.States.SHOW_INVENTORY then
 						Game.state = Game.previousState

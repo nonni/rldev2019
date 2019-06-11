@@ -107,7 +107,7 @@ function RenderFunctions.clearAll(entities, dy)
 end
 
 function RenderFunctions.rectangle(layer, color, x, y, w, h, char)
-    char = char or '▒'
+    char = char or '█'
     terminal.layer(layer)
     for curY = 0,h do
         terminal.print(x, y + curY, string.format('[color=%s]%s', color, string.rep(char, w)))
