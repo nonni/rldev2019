@@ -128,7 +128,7 @@ function GameMap:placeEntities(room, entities, maxMonstersPerRoom, maxItemsPerRo
                     x,
                     y,
                     'o',
-                    'light green',
+                    PALETTE['light_green'],
                     'Orc',
                     {
                         blocks = true,
@@ -142,7 +142,7 @@ function GameMap:placeEntities(room, entities, maxMonstersPerRoom, maxItemsPerRo
                     x,
                     y,
                     'T',
-                    'green',
+                    PALETTE['dark_green'],
                     'Troll',
                     {
                         blocks = true,
@@ -174,7 +174,7 @@ function GameMap:placeEntities(room, entities, maxMonstersPerRoom, maxItemsPerRo
                 x,
                 y,
                 '!',
-                'violet',
+                PALETTE['light_blue'],
                 'Healing potion',
                 {
                     renderOrder = Enums.RenderOrder.ITEM,

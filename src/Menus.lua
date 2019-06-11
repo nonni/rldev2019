@@ -14,15 +14,14 @@ function Menus.menu(layer, header, options, width, screenWidth, screenHeight)
     local startX = math.floor((screenWidth / 2) - (width / 2))
     local currentY = math.floor((screenHeight / 2) - (height / 2))
 
-    terminal.layer(layer)
-
     local headerLines = wrap(header, width)
     local totalHeight = #headerLines + #options
-    RenderFunctions.rectangle(layer, 'gray', startX, currentY, width, totalHeight)
 
+    RenderFunctions.rectangle(Enums.Layers.UI_BACK, 'gray', startX, currentY, width, totalHeight)
+    terminal.layer(layer)
     -- Print header
     for _,v in ipairs(headerLines) do
-        terminal.print(startX, currentY, v)
+        terminal.print(startX, currentY, ''..v)
         currentY = currentY + 1
     end
 

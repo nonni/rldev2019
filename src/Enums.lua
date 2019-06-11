@@ -16,8 +16,9 @@ Enums.RenderOrder = {
 Enums.Layers = {
     DUNGEON = 0,
     ENTITIES = 1,
-    UI = 2,
-    INVENTORY = 3
+    UI_BACK = 2,
+    UI = 3,
+    INVENTORY = 4
 }
 
 

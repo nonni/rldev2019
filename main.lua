@@ -141,6 +141,7 @@ function Game.gameloop()
 					if Game.state == Enums.States.SHOW_INVENTORY then
 						Game.state = Game.previousState
 						RenderFunctions.clearLayer(Enums.Layers.INVENTORY, 0, 0, Game.screenWidth, Game.screenHeight)
+						RenderFunctions.clearLayer(Enums.Layers.UI_BACK, 0, 0, Game.screenWidth, Game.screenHeight)
 					else
 						Game.quit = true
 						break
@@ -232,7 +233,7 @@ function Game.draw()
 	-- Print something
 	RenderFunctions.renderAll(Game.entities, Game.player, Game.gameMap, Game.fovMap, Game.messageLog, Game.screenWidth, Game.screenHeight, Game.state)
 	terminal.refresh()
-	RenderFunctions.clearAll(Game.entities)
+	RenderFunctions.clearAll(Game.entities, Game.screenHeight - Game.gameMap.height - 1)
 end
 
 function Game.cleanup()

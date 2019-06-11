@@ -29,6 +29,7 @@ end
 function RenderFunctions.renderAll(entities, player, gameMap, fovMap, messageLog, screenWidth, screenHeight, gameState)
     -- Draw all the tiles in the game map
     terminal.layer(Enums.Layers.DUNGEON)
+    local dy = screenHeight - gameMap.height - 1
     for y = 1, gameMap.height do
         for x = 1, gameMap.width do
             local wall = gameMap.tiles[y][x].blocked
@@ -39,7 +40,7 @@ function RenderFunctions.renderAll(entities, player, gameMap, fovMap, messageLog
                 else
                     terminal.bkcolor(PALETTE['dark_wall'])
                 end
-                terminal.print(x-1, y-1, ' ')
+                terminal.print(x-1, y+dy, ' ')
             else
                 if fovMap[x..','..y] then
                     terminal.bkcolor(PALETTE['light_ground'])
@@ -49,7 +50,7 @@ function RenderFunctions.renderAll(entities, player, gameMap, fovMap, messageLog
                 else
                     terminal.bkcolor(PALETTE['dark_wall'])
                 end
-                terminal.print(x-1, y-1, ' ')
+                terminal.print(x-1, y+dy, ' ')
             end
         end
     end
@@ -62,21 +63,21 @@ function RenderFunctions.renderAll(entities, player, gameMap, fovMap, messageLog
     end)
     -- Draw all entities in the list
     for _, v in ipairs(entities) do
-        RenderFunctions.drawEntity(v, fovMap)
+        RenderFunctions.drawEntity(v, fovMap, dy)
     end
 
     terminal.layer(Enums.Layers.UI)
     -- Draw UI
-    RenderFunctions.renderBar(1, 1, Game.uiBarWidth, 'HP', player.fighter.hp, player.fighter.maxHp, 'light red', 'dark red', 2)
+    RenderFunctions.renderBar(1, 1, Game.uiBarWidth, 'HP', player.fighter.hp, player.fighter.maxHp, PALETTE['red'], PALETTE['violet'], 2)
 
     local names = RenderFunctions.getNamesUnderMouse(
         terminal.state(terminal.TK_MOUSE_X),
-        terminal.state(terminal.TK_MOUSE_Y),
+        terminal.state(terminal.TK_MOUSE_Y) - dy - 1,
         entities,
         fovMap
     )
     terminal.clear_area(1, 0, screenWidth, 1)
-    terminal.print(1, 0, names)
+    terminal.print(1, 0, '[color=white]'..names)
 
     -- Print the game messages, one line at a time
     local y = 1
@@ -88,38 +89,41 @@ function RenderFunctions.renderAll(entities, player, gameMap, fovMap, messageLog
 
     -- Display inventory if game state is show inventory.
     if gameState == Enums.States.SHOW_INVENTORY then
-        Menus.inventoryMenu(Enums.Layers.Inventory, 'Press the key next to an item to use it, or Esc to cancel.', Game.player.inventory, 50, screenWidth, screenHeight)
+        Menus.inventoryMenu(Enums.Layers.INVENTORY, 'Press the key next to an item to use it, or Esc to cancel.', Game.player.inventory, 50, screenWidth, screenHeight)
     end
 end
 
+-- Clear rectangle from layer
 function RenderFunctions.clearLayer(layer, x, y, width, height)
+    terminal.layer(layer)
     terminal.clear_area(x, y, width, height)
 end
 
-function RenderFunctions.clearAll(entities)
+function RenderFunctions.clearAll(entities, dy)
     terminal.layer(Enums.Layers.ENTITIES)
     for _, v in ipairs(entities) do
-        RenderFunctions.clearEntity(v)
+        RenderFunctions.clearEntity(v, dy)
     end
 end
 
-function RenderFunctions.rectangle(layer, color, x, y, w, h)
+function RenderFunctions.rectangle(layer, color, x, y, w, h, char)
+    char = char or '▒'
     terminal.layer(layer)
     for curY = 0,h do
-        terminal.print(x, y + curY, string.format('[color=%s]%s', color, string.rep('▒', w)))
+        terminal.print(x, y + curY, string.format('[color=%s]%s', color, string.rep(char, w)))
     end
 end
 
 
-function RenderFunctions.drawEntity(entity, fovMap)
+function RenderFunctions.drawEntity(entity, fovMap, dy)
     if fovMap[entity.x..','..entity.y] then
         terminal.color(entity.color)
-        terminal.print(entity.x - 1, entity.y - 1, entity.char)
+        terminal.print(entity.x - 1, entity.y + dy, entity.char)
     end
 end
 
-function RenderFunctions.clearEntity(entity)
-    terminal.print(entity.x - 1, entity.y - 1, ' ')
+function RenderFunctions.clearEntity(entity, dy)
+    terminal.print(entity.x - 1, entity.y + dy, ' ')
 end
 
 return RenderFunctions
