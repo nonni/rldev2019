@@ -26,3 +26,29 @@ function Inventory:addItem(item)
     end
     return results
 end
+
+function Inventory:use(entity)
+    local results = {}
+    local itemComponent = entity.item
+
+    if not itemComponent.useFunction then
+        table.insert(results, {'message', Message(string.format('The %s cannot be used', entity.name), 'yellow')})
+    else
+        local args = itemComponent.defaultOpts
+        args.entity = self.owner
+        local itemUseResult = itemComponent.useFunction(args)
+        for _,v in ipairs(itemUseResult) do
+            if v[1] == 'consumed' and v[2] == true then
+                for i,x in ipairs(self.items) do
+                    if x.id == entity.id then
+                        table.remove(self.items, i)
+                    end
+                end
+            end
+
+            table.insert(results, v)
+        end
+    end
+
+    return results
+end

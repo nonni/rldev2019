@@ -178,7 +178,7 @@ function GameMap:placeEntities(room, entities, maxMonstersPerRoom, maxItemsPerRo
                 'Healing potion',
                 {
                     renderOrder = Enums.RenderOrder.ITEM,
-                    item = Item()
+                    item = Item(ItemFunctions.heal, {amount = 4})
                 }
             )
             entities[#entities+1] = item

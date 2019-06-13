@@ -18,6 +18,10 @@ function Fighter:takeDamage(amount)
     return results
 end
 
+function Fighter:heal(amount)
+    self.hp = math.min(self.hp + amount, self.maxHp)
+end
+
 function Fighter:attack(target)
     local results = {}
     local damage = self.power - target.fighter.defense

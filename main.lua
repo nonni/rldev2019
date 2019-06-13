@@ -9,6 +9,7 @@ FOVFunctions = require 'src/FOVFunctions'
 InputHandler = require 'src/InputHandler'
 RenderFunctions = require 'src/RenderFunctions'
 DeathFunctions = require 'src/DeathFunctions'
+ItemFunctions = require 'src/ItemFunctions'
 require 'src/Message'
 require 'src/MessageLog'
 require 'src/Menus'
@@ -147,7 +148,10 @@ function Game.gameloop()
 						action[2] <= #Game.player.inventory.items
 					then
 						local item = Game.player.inventory.items[action[2]]
-						print(item.name)
+						local itemResults = Game.player.inventory:use(item)
+						for _,v in ipairs(itemResults) do
+							table.insert(playerTurnResults, v)
+						end
 					end
 				elseif action[1] == 'exit' then
 					if Game.state == Enums.States.SHOW_INVENTORY then
@@ -187,6 +191,10 @@ function Game.gameloop()
 						end
 
 						Game.state = Enums.States.ENEMY_TURN
+					elseif v[1] == 'consumed' and v[2] == true then
+						Game.state = Enums.States.ENEMY_TURN
+						RenderFunctions.clearLayer(Enums.Layers.INVENTORY, 0, 0, Game.screenWidth, Game.screenHeight)
+						RenderFunctions.clearLayer(Enums.Layers.UI_BACK, 0, 0, Game.screenWidth, Game.screenHeight)
 					end
 				end
 			end
