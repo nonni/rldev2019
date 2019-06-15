@@ -18,6 +18,7 @@ InputHandler.playerTurnKeyActions = {
     [terminal.TK_N] = {'move', {1, 1}},
     [terminal.TK_G] = {'pickup', true},
     [terminal.TK_I] = {'show_inventory', true},
+    [terminal.TK_D] = {'drop_inventory', true},
     [terminal.TK_RETURN] = function() return terminal.check(terminal.TK_CONTROL) and {'fullscreen', true} or {} end
 }
 
@@ -48,7 +49,8 @@ function InputHandler.handleKeys(key, gameState)
         actions = InputHandler.playerTurnKeyActions
     elseif gameState == Enums.States.PLAYER_DEAD then
         actions = InputHandler.playerDeadKeyActions
-    elseif gameState == Enums.States.SHOW_INVENTORY then
+    elseif gameState == Enums.States.SHOW_INVENTORY or
+        gameState == Enums.States.DROP_INVENTORY then
         return InputHandler.inventoryKeyActions(key)
     end
 

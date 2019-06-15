@@ -42,6 +42,7 @@ function Inventory:use(entity)
                 for i,x in ipairs(self.items) do
                     if x.id == entity.id then
                         table.remove(self.items, i)
+                        break
                     end
                 end
             end
@@ -49,6 +50,25 @@ function Inventory:use(entity)
             table.insert(results, v)
         end
     end
+
+    return results
+end
+
+function Inventory:dropItem(entity)
+    local results = {}
+
+    entity.x = self.owner.x
+    entity.y = self.owner.y
+
+    for i,x in ipairs(self.items) do
+        if x.id == entity.id then
+            table.remove(self.items, i)
+            break
+        end
+    end
+
+    table.insert(results, {'item_dropped', entity})
+    table.insert(results, {'message', Message(string.format('You dropped %s', entity.name), 'yellow')})
 
     return results
 end

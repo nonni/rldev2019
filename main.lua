@@ -141,20 +141,29 @@ function Game.gameloop()
 				elseif action[1] == 'show_inventory' then
 					Game.previousState = Game.state
 					Game.state = Enums.States.SHOW_INVENTORY
+				elseif action[1] == 'drop_inventory' then
+					Game.previousState = Game.state
+					Game.state = Enums.States.DROP_INVENTORY
 				elseif action[1] == 'inventory_index' then
-					if Game.state == Enums.States.SHOW_INVENTORY and
+					if (Game.state == Enums.States.SHOW_INVENTORY or Game.state == Enums.States.DROP_INVENTORY) and
 						Game.previousState ~= Enums.States.PLAYER_DEAD and
 						action[2] and
 						action[2] <= #Game.player.inventory.items
 					then
 						local item = Game.player.inventory.items[action[2]]
-						local itemResults = Game.player.inventory:use(item)
+						local itemResults
+						if Game.state == Enums.States.SHOW_INVENTORY then
+							itemResults = Game.player.inventory:use(item)
+						else
+							itemResults = Game.player.inventory:dropItem(item)
+						end
 						for _,v in ipairs(itemResults) do
 							table.insert(playerTurnResults, v)
 						end
 					end
 				elseif action[1] == 'exit' then
-					if Game.state == Enums.States.SHOW_INVENTORY then
+					if Game.state == Enums.States.SHOW_INVENTORY
+						or Game.state == Enums.States.DROP_INVENTORY then
 						Game.state = Game.previousState
 						RenderFunctions.clearLayer(Enums.Layers.INVENTORY, 0, 0, Game.screenWidth, Game.screenHeight)
 						RenderFunctions.clearLayer(Enums.Layers.UI_BACK, 0, 0, Game.screenWidth, Game.screenHeight)
@@ -189,9 +198,13 @@ function Game.gameloop()
 								break
 							end
 						end
-
 						Game.state = Enums.States.ENEMY_TURN
 					elseif v[1] == 'consumed' and v[2] == true then
+						Game.state = Enums.States.ENEMY_TURN
+						RenderFunctions.clearLayer(Enums.Layers.INVENTORY, 0, 0, Game.screenWidth, Game.screenHeight)
+						RenderFunctions.clearLayer(Enums.Layers.UI_BACK, 0, 0, Game.screenWidth, Game.screenHeight)
+					elseif v[1] == 'item_dropped' then
+						table.insert(Game.entities, v[2])
 						Game.state = Enums.States.ENEMY_TURN
 						RenderFunctions.clearLayer(Enums.Layers.INVENTORY, 0, 0, Game.screenWidth, Game.screenHeight)
 						RenderFunctions.clearLayer(Enums.Layers.UI_BACK, 0, 0, Game.screenWidth, Game.screenHeight)
@@ -217,10 +230,10 @@ function Game.update()
 	end
 
 	if Game.state == Enums.States.ENEMY_TURN then
-		for _, v in ipairs(Game.entities) do
-			if v.name ~= 'Player' then
-				if v.ai then
-					local enemyTurnResults = v.ai:takeTurn(Game.player, Game.fovMap, Game.gameMap, Game.entities)
+		for _, e in ipairs(Game.entities) do
+			if e.name ~= 'Player' then
+				if e.ai then
+					local enemyTurnResults = e.ai:takeTurn(Game.player, Game.fovMap, Game.gameMap, Game.entities)
 					for _,v in ipairs(enemyTurnResults) do
 						if v[1] == 'message' then
 							Game.messageLog:addMessage(v[2])
@@ -251,9 +264,21 @@ end
 
 function Game.draw()
 	-- Print something
-	RenderFunctions.renderAll(Game.entities, Game.player, Game.gameMap, Game.fovMap, Game.messageLog, Game.screenWidth, Game.screenHeight, Game.state)
+	RenderFunctions.renderAll(
+		Game.entities,
+		Game.player,
+		Game.gameMap,
+		Game.fovMap,
+		Game.messageLog,
+		Game.screenWidth,
+		Game.screenHeight,
+		Game.state
+	)
 	terminal.refresh()
-	RenderFunctions.clearAll(Game.entities, Game.screenHeight - Game.gameMap.height - 1)
+	RenderFunctions.clearAll(
+		Game.entities,
+		Game.screenHeight - Game.gameMap.height - 1
+	)
 end
 
 function Game.cleanup()

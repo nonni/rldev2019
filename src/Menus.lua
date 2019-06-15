@@ -1,7 +1,7 @@
 Menus = {}
 
 function Menus.menu(layer, header, options, width, screenWidth, screenHeight)
-    if #options > 26 then 
+    if #options > 26 then
         error('Cannot have a menu with more than 26 options.')
     end
 
