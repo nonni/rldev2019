@@ -89,14 +89,21 @@ function RenderFunctions.renderAll(entities, player, gameMap, fovMap, messageLog
 
     -- Display inventory if game state is show inventory.
     if gameState == Enums.States.SHOW_INVENTORY or gameState == Enums.States.DROP_INVENTORY then
-        local inventoryTitle = ''
+        local inventoryTitle
         terminal.color('white')
         if gameState == Enums.States.SHOW_INVENTORY then
             inventoryTitle = 'Press the key next to an item to use it, or Esc to cancel.'
         else
-            inventoryTitle = 'Press the key next to an item to drop it, or Esc to cancel.'    
+            inventoryTitle = 'Press the key next to an item to drop it, or Esc to cancel.'
         end
-        Menus.inventoryMenu(Enums.Layers.INVENTORY, inventoryTitle, Game.player.inventory, 50, screenWidth, screenHeight)
+        Menus.inventoryMenu(
+            Enums.Layers.INVENTORY,
+            inventoryTitle,
+            Game.player.inventory,
+            50,
+            screenWidth,
+            screenHeight
+        )
     end
 end
 

@@ -153,7 +153,7 @@ function Game.gameloop()
 						local item = Game.player.inventory.items[action[2]]
 						local itemResults
 						if Game.state == Enums.States.SHOW_INVENTORY then
-							itemResults = Game.player.inventory:use(item)
+							itemResults = Game.player.inventory:use(item, {entities = Game.entities, fov_map = Game.fovMap})
 						else
 							itemResults = Game.player.inventory:dropItem(item)
 						end

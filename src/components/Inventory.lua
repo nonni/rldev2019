@@ -27,7 +27,7 @@ function Inventory:addItem(item)
     return results
 end
 
-function Inventory:use(entity)
+function Inventory:use(entity, opts)
     local results = {}
     local itemComponent = entity.item
 
@@ -36,6 +36,11 @@ function Inventory:use(entity)
     else
         local args = itemComponent.defaultOpts
         args.entity = self.owner
+        if opts then
+            for k,v in pairs(opts) do
+                args[k] = v
+            end
+        end
         local itemUseResult = itemComponent.useFunction(args)
         for _,v in ipairs(itemUseResult) do
             if v[1] == 'consumed' and v[2] == true then

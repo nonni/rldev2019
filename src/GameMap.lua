@@ -170,17 +170,36 @@ function GameMap:placeEntities(room, entities, maxMonstersPerRoom, maxItemsPerRo
         end
 
         if not collision then
-            local item = Entity(
-                x,
-                y,
-                '!',
-                PALETTE['light_blue'],
-                'Healing potion',
-                {
-                    renderOrder = Enums.RenderOrder.ITEM,
-                    item = Item(ItemFunctions.heal, {amount = 4})
-                }
-            )
+            local itemChance = randInt(0, 100)
+            local item
+
+            if itemChance < 70 then
+                -- Healing potion
+                item = Entity(
+                    x,
+                    y,
+                    '!',
+                    PALETTE['light_blue'],
+                    'Healing potion',
+                    {
+                        renderOrder = Enums.RenderOrder.ITEM,
+                        item = Item(ItemFunctions.heal, {amount = 4})
+                    }
+                )
+            else
+                -- Scroll
+                item = Entity(
+                    x,
+                    y,
+                    '#',
+                    'yellow',
+                    'Lightning Scroll',
+                    {
+                        renderOrder = Enums.RenderOrder.ITEM,
+                        item = Item(ItemFunctions.castLightning, {damage = 20, maximum_range=5})
+                    }
+                )
+            end
             entities[#entities+1] = item
         end
     end
