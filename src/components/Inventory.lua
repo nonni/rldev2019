@@ -34,25 +34,29 @@ function Inventory:use(entity, opts)
     if not itemComponent.useFunction then
         table.insert(results, {'message', Message(string.format('The %s cannot be used', entity.name), 'yellow')})
     else
-        local args = itemComponent.defaultOpts
-        args.entity = self.owner
-        if opts then
-            for k,v in pairs(opts) do
-                args[k] = v
-            end
-        end
-        local itemUseResult = itemComponent.useFunction(args)
-        for _,v in ipairs(itemUseResult) do
-            if v[1] == 'consumed' and v[2] == true then
-                for i,x in ipairs(self.items) do
-                    if x.id == entity.id then
-                        table.remove(self.items, i)
-                        break
-                    end
+        if itemComponent.targeting and not (opts['target_x'] or opts['target_y']) then
+            table.insert(results, {'targeting', entity})
+        else
+            local args = itemComponent.defaultOpts
+            args.entity = self.owner
+            if opts then
+                for k,v in pairs(opts) do
+                    args[k] = v
                 end
             end
+            local itemUseResult = itemComponent.useFunction(args)
+            for _,v in ipairs(itemUseResult) do
+                if v[1] == 'consumed' and v[2] == true then
+                    for i,x in ipairs(self.items) do
+                        if x.id == entity.id then
+                            table.remove(self.items, i)
+                            break
+                        end
+                    end
+                end
 
-            table.insert(results, v)
+                table.insert(results, v)
+            end
         end
     end
 

@@ -161,6 +161,15 @@ function Game.gameloop()
 							table.insert(playerTurnResults, v)
 						end
 					end
+				elseif Game.state == Enums.States.TARGETING and action[1] == 'left_click' then
+					local useResults = Game.player.inventory:use(Game.targetingItem, {entities = Game.entities, fov_map = Game.fovMap, target_x = action[2][1], target_y = action[2][2]})
+					for _,v in ipairs(useResults) do
+						table.insert(playerTurnResults, v)
+					end
+				elseif Game.state == Enums.States.TARGETING and action[1] == 'right_click' then
+					table.insert(playerTurnResults, {'targeting_cancelled', true})
+					RenderFunctions.clearLayer(Enums.Layers.INVENTORY, 0, 0, Game.screenWidth, Game.screenHeight)
+					RenderFunctions.clearLayer(Enums.Layers.UI_BACK, 0, 0, Game.screenWidth, Game.screenHeight)
 				elseif action[1] == 'exit' then
 					if Game.state == Enums.States.SHOW_INVENTORY
 						or Game.state == Enums.States.DROP_INVENTORY then
@@ -208,6 +217,14 @@ function Game.gameloop()
 						Game.state = Enums.States.ENEMY_TURN
 						RenderFunctions.clearLayer(Enums.Layers.INVENTORY, 0, 0, Game.screenWidth, Game.screenHeight)
 						RenderFunctions.clearLayer(Enums.Layers.UI_BACK, 0, 0, Game.screenWidth, Game.screenHeight)
+					elseif v[1] == 'targeting' then
+						Game.previousState = Enums.States.PLAYERS_TURN
+						Game.state = Enums.States.TARGETING
+						Game.targetingItem = v[2]
+						Game.messageLog:addMessage(Game.targetingItem.item.targetingMessage)
+					elseif v[1] == 'targeting_cancelled' then
+						Game.state = Game.previousState
+						Game.messageLog:addMessage(Message('Targeting cancelled'))
 					end
 				end
 			end

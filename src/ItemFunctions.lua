@@ -34,7 +34,7 @@ function ItemFunctions.castLightning(opts)
             e.id ~= caster.id and
             fovMap[e.x..','..e.y]
         then
-            local distance = caster:distance(e)
+            local distance = caster:distanceTo(e)
             if distance < closestDistance then
                 target = e
                 closestDistance = distance
@@ -54,6 +54,38 @@ function ItemFunctions.castLightning(opts)
         table.insert(results, {'consumed', false})
         table.insert(results, {'target', nil})
         table.insert(results, {'message', Message('No enemy is close enough to strike.', 'red')})
+    end
+
+    return results
+end
+
+function ItemFunctions.castFireball(opts)
+    local entities = opts['entities']
+    local fovMap = opts['fov_map']
+    local damage = opts['damage']
+    local radius = opts['radius']
+    local targetX = opts['target_x']
+    local targetY = opts['target_y']
+
+    local results = {}
+
+    if not fovMap[targetX..','..targetY] then
+        table.insert(results, {'consumed', false})
+        table.insert(results, {'message', Message('You cannot target a tile outside your field of view.', 'yellow')})
+        return results
+    end
+
+    table.insert(results, {'consumed', true})
+    table.insert(results, {'message', Message(string.format('The fireball explodes, burning everything within %s tiles!', radius), orange)})
+
+    for _,e in ipairs(entities) do
+        if e.fighter and e:distance(targetX, targetY) <= radius then
+            table.insert(results, {'message', Message(string.format('The %s gets burned for %s hit points.', e.name, damage), 'orange')})
+            local res = e.fighter:takeDamage(damage)
+            for _,r in ipairs(res) do
+                table.insert(results, r)
+            end
+        end
     end
 
     return results

@@ -113,6 +113,6 @@ function Entity:moveAStar(target, gameMap, entities)
     path = nil
 end
 
-function Entity:distance(entity)
-    return math.sqrt(math.pow(self.x - entity.x, 2) + math.pow(self.y - entity.y, 2))
+function Entity:distance(x, y)
+    return math.sqrt(math.pow(self.x - x, 2) + math.pow(self.y - y, 2))
 end

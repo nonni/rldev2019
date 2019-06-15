@@ -12,5 +12,6 @@ PALETTE = {
     ['light_blue'] = '#597dce',
     ['red'] = '#d04648',
     ['violet'] = '#442434',
-    ['yellow'] = '#dad45e'
+    ['yellow'] = '#dad45e',
+    ['light_cyan'] = '#6dc2ca'
 }

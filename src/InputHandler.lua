@@ -28,6 +28,12 @@ InputHandler.playerDeadKeyActions = {
     [terminal.TK_RETURN] = function() return terminal.check(terminal.TK_CONTROL) and {'fullscreen', true} or {} end
 }
 
+InputHandler.targetingKeyActions = {
+    [terminal.TK_ESCAPE] = {'exit', true},
+    [terminal.TK_MOUSE_LEFT] = function() return {'left_click', {math.floor(terminal.state(terminal.TK_MOUSE_X) + 1), math.floor(terminal.state(terminal.TK_MOUSE_Y) - (Game.screenHeight - Game.mapHeight - 1))}} end,
+    [terminal.TK_MOUSE_RIGHT] = function() return {'right_click',  {math.floor(terminal.state(terminal.TK_MOUSE_X) + 1), math.floor(terminal.state(terminal.TK_MOUSE_Y) - (Game.screenHeight - Game.mapHeight - 1))}} end
+}
+
 function InputHandler.inventoryKeyActions(key)
     if key == terminal.TK_ESCAPE then
         return {'exit', true}
@@ -49,6 +55,8 @@ function InputHandler.handleKeys(key, gameState)
         actions = InputHandler.playerTurnKeyActions
     elseif gameState == Enums.States.PLAYER_DEAD then
         actions = InputHandler.playerDeadKeyActions
+    elseif gameState == Enums.States.TARGETING then
+        actions = InputHandler.targetingKeyActions
     elseif gameState == Enums.States.SHOW_INVENTORY or
         gameState == Enums.States.DROP_INVENTORY then
         return InputHandler.inventoryKeyActions(key)
@@ -58,7 +66,6 @@ function InputHandler.handleKeys(key, gameState)
         local action = actions[key]
         return action and type(action) == "function" and action() or action
     else
-        print ('return empty')
         return {}
     end
 end
