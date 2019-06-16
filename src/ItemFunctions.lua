@@ -76,7 +76,7 @@ function ItemFunctions.castFireball(opts)
     end
 
     table.insert(results, {'consumed', true})
-    table.insert(results, {'message', Message(string.format('The fireball explodes, burning everything within %s tiles!', radius), orange)})
+    table.insert(results, {'message', Message(string.format('The fireball explodes, burning everything within %s tiles!', radius), 'orange')})
 
     for _,e in ipairs(entities) do
         if e.fighter and e:distance(targetX, targetY) <= radius then
@@ -86,6 +86,43 @@ function ItemFunctions.castFireball(opts)
                 table.insert(results, r)
             end
         end
+    end
+
+    return results
+end
+
+function ItemFunctions.castConfuse(opts)
+    local entities = opts['entities']
+    local fovMap = opts['fov_map']
+    local targetX = opts['target_x']
+    local targetY = opts['target_y']
+
+    local results = {}
+
+    if not fovMap[targetX..','..targetY] then
+        table.insert(results, {'consumed', false})
+        table.insert(results, {'message', Message('You cannot target a tile outside your field of view.', 'yellow')})
+        return results
+    end
+
+    local foundMonster = false
+    for _,e in ipairs(entities) do
+        if e.x == targetX and e.y == targetY and e.ai then
+            local confusedAI = ConfusedMonster(e.ai, 10)
+            confusedAI.owner = e
+            e.ai = confusedAI
+
+            table.insert(results, {'consumed', true})
+            table.insert(results, {'message', Message(string.format('The eyes of the %s look vacant, as he starts to stumble around!', e.name), 'light green')})
+
+            foundMonster = true
+            break
+        end
+    end
+
+    if not foundMonster then
+        table.insert(results, {'consumed', false})
+        table.insert(results, {'message', Message('There is no targetable enemy at that location.', 'yellow')})
     end
 
     return results

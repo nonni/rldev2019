@@ -222,6 +222,8 @@ function Game.gameloop()
 						Game.state = Enums.States.TARGETING
 						Game.targetingItem = v[2]
 						Game.messageLog:addMessage(Game.targetingItem.item.targetingMessage)
+						RenderFunctions.clearLayer(Enums.Layers.INVENTORY, 0, 0, Game.screenWidth, Game.screenHeight)
+						RenderFunctions.clearLayer(Enums.Layers.UI_BACK, 0, 0, Game.screenWidth, Game.screenHeight)
 					elseif v[1] == 'targeting_cancelled' then
 						Game.state = Game.previousState
 						Game.messageLog:addMessage(Message('Targeting cancelled'))

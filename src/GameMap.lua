@@ -173,7 +173,7 @@ function GameMap:placeEntities(room, entities, maxMonstersPerRoom, maxItemsPerRo
             local itemChance = randInt(0, 100)
             local item
 
-            if itemChance < 1 then
+            if itemChance < 70 then
                 -- Healing potion
                 item = Entity(
                     x,
@@ -186,7 +186,7 @@ function GameMap:placeEntities(room, entities, maxMonstersPerRoom, maxItemsPerRo
                         item = Item(ItemFunctions.heal, {amount = 4})
                     }
                 )
-            elseif itemChance < 85 then
+            elseif itemChance < 80 then
                 -- Fireball scroll
                 item = Entity(
                     x,
@@ -197,6 +197,19 @@ function GameMap:placeEntities(room, entities, maxMonstersPerRoom, maxItemsPerRo
                     {
                         renderOrder = Enums.RenderOrder.ITEM,
                         item = Item(ItemFunctions.castFireball, {targeting = true, targeting_message = Message('Left-click a target tile for the fireball, or right-click to cancel.', PALETTE['light_cyan']), damage = 12, radius = 3})
+                    }
+                )
+            elseif itemChance < 90 then
+                -- Confusion scroll
+                item = Entity(
+                    x,
+                    y,
+                    '#',
+                    'pink',
+                    'Confusion Scroll',
+                    {
+                        renderOrder = Enums.RenderOrder.ITEM,
+                        item = Item(ItemFunctions.castConfuse, {targeting = true, targeting_message = Message('Left-click an enemy to confuse it, or right-click to cancel.', PALETTE['light_cyan'])})
                     }
                 )
             else

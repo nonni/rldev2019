@@ -26,5 +26,6 @@ globals = {
     'Menus',
     'RenderFunctions',
     'PALETTE',
-    'ItemFunctions'
+    'ItemFunctions',
+    'ConfusedMonster'
 }
