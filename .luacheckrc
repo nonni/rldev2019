@@ -27,5 +27,7 @@ globals = {
     'RenderFunctions',
     'PALETTE',
     'ItemFunctions',
-    'ConfusedMonster'
+    'ConfusedMonster',
+    'LoaderFunctions',
+    'Persistence'
 }

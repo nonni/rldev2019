@@ -25,13 +25,15 @@ InputHandler.playerTurnKeyActions = {
 InputHandler.playerDeadKeyActions = {
     [terminal.TK_I] = {'show_inventory', true},
     [terminal.TK_ESCAPE] = {'exit', true},
+    [terminal.TK_CLOSE] = {'exit', true},
     [terminal.TK_RETURN] = function() return terminal.check(terminal.TK_CONTROL) and {'fullscreen', true} or {} end
 }
 
 InputHandler.targetingKeyActions = {
     [terminal.TK_ESCAPE] = {'exit', true},
     [terminal.TK_MOUSE_LEFT] = function() return {'left_click', {math.floor(terminal.state(terminal.TK_MOUSE_X) + 1), math.floor(terminal.state(terminal.TK_MOUSE_Y) - (Game.screenHeight - Game.mapHeight - 1))}} end,
-    [terminal.TK_MOUSE_RIGHT] = function() return {'right_click',  {math.floor(terminal.state(terminal.TK_MOUSE_X) + 1), math.floor(terminal.state(terminal.TK_MOUSE_Y) - (Game.screenHeight - Game.mapHeight - 1))}} end
+    [terminal.TK_MOUSE_RIGHT] = function() return {'right_click',  {math.floor(terminal.state(terminal.TK_MOUSE_X) + 1), math.floor(terminal.state(terminal.TK_MOUSE_Y) - (Game.screenHeight - Game.mapHeight - 1))}} end,
+    [terminal.TK_CLOSE] = {'exit', true}
 }
 
 function InputHandler.inventoryKeyActions(key)

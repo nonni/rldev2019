@@ -183,7 +183,7 @@ function GameMap:placeEntities(room, entities, maxMonstersPerRoom, maxItemsPerRo
                     'Healing potion',
                     {
                         renderOrder = Enums.RenderOrder.ITEM,
-                        item = Item(ItemFunctions.heal, {amount = 4})
+                        item = Item(ItemFunctions.heal, {amount = 4, functionName = 'heal'})
                     }
                 )
             elseif itemChance < 80 then
@@ -196,7 +196,7 @@ function GameMap:placeEntities(room, entities, maxMonstersPerRoom, maxItemsPerRo
                     'Fireball Scroll',
                     {
                         renderOrder = Enums.RenderOrder.ITEM,
-                        item = Item(ItemFunctions.castFireball, {targeting = true, targeting_message = Message('Left-click a target tile for the fireball, or right-click to cancel.', PALETTE['light_cyan']), damage = 12, radius = 3})
+                        item = Item(ItemFunctions.castFireball, {functionName = 'castFireball', targeting = true, targeting_message = Message('Left-click a target tile for the fireball, or right-click to cancel.', PALETTE['light_cyan']), damage = 12, radius = 3})
                     }
                 )
             elseif itemChance < 90 then
@@ -209,7 +209,7 @@ function GameMap:placeEntities(room, entities, maxMonstersPerRoom, maxItemsPerRo
                     'Confusion Scroll',
                     {
                         renderOrder = Enums.RenderOrder.ITEM,
-                        item = Item(ItemFunctions.castConfuse, {targeting = true, targeting_message = Message('Left-click an enemy to confuse it, or right-click to cancel.', PALETTE['light_cyan'])})
+                        item = Item(ItemFunctions.castConfuse, {functionName = 'castConfuse', targeting = true, targeting_message = Message('Left-click an enemy to confuse it, or right-click to cancel.', PALETTE['light_cyan'])})
                     }
                 )
             else
@@ -222,7 +222,7 @@ function GameMap:placeEntities(room, entities, maxMonstersPerRoom, maxItemsPerRo
                     'Lightning Scroll',
                     {
                         renderOrder = Enums.RenderOrder.ITEM,
-                        item = Item(ItemFunctions.castLightning, {damage = 20, maximum_range=5})
+                        item = Item(ItemFunctions.castLightning, {functionName = 'castLightning', damage = 20, maximum_range=5})
                     }
                 )
             end

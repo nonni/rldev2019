@@ -1,16 +1,12 @@
 Game = {}
 
 function Game.init()
-	-- Seed random (os.time OK for now)
-	math.randomseed(os.time())
-
 	LoaderFunctions.setGameConstants(Game)
 	LoaderFunctions.initializeGameVariables(Game)
+end
 
-	-- Initialize the library
-	terminal.open()
-	terminal.set("window: size=80x50; font: img/Talryth-square-15x15.png, size=15x15, codepage=437");
-	terminal.set("input: filter=[keyboard,mouse]")
+function Game.load(state)
+
 end
 
 function Game.gameloop()
@@ -93,6 +89,7 @@ function Game.gameloop()
 						RenderFunctions.clearLayer(Enums.Layers.INVENTORY, 0, 0, Game.screenWidth, Game.screenHeight)
 						RenderFunctions.clearLayer(Enums.Layers.UI_BACK, 0, 0, Game.screenWidth, Game.screenHeight)
 					else
+						LoaderFunctions.saveGame(Game.player, Game.entities, Game.gameMap, Game.messageLog, Game.state)
 						Game.quit = true
 						break
 					end
@@ -217,7 +214,7 @@ function Game.draw()
 end
 
 function Game.cleanup()
-	terminal.close()
+
 end
 
 return Game

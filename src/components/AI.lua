@@ -1,5 +1,9 @@
 BasicMonster = Object:extend()
 
+function BasicMonster:new()
+    self.name = 'BasicMonster'
+end
+
 function BasicMonster:takeTurn(target, fovMap, gameMap, entities)
     local results = {}
     local monster = self.owner
@@ -23,6 +27,7 @@ end
 ConfusedMonster = Object:extend()
 
 function ConfusedMonster:new(previousAI, numberOfTurns)
+    self.name = 'ConfusedMonster'
     self.numberOfTurns = numberOfTurns or 10
     self.previousAI = previousAI
 end
@@ -40,6 +45,10 @@ function ConfusedMonster:takeTurn(_, _, gameMap, entities)
 
         self.numberOfTurns = self.numberOfTurns - 1
     else
+        if not self.previousAI.owner then
+            self.previousAI.owner = self.owner
+        end
+
         self.owner.ai = self.previousAI
         table.insert(results, {'message', Message(string.format('The %s is no longer confused!', self.owner.name), 'red')})
     end

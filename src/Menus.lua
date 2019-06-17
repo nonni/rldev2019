@@ -50,3 +50,17 @@ function Menus.inventoryMenu(layer, header, inventory, inventoryWidth, screenWid
 
     Menus.menu(layer, header, options, inventoryWidth, screenWidth, screenHeight)
 end
+
+function Menus.mainMenu(screenWidth, screenHeight)
+    local options = {
+        'Play a new game',
+        'Continue last game',
+        'Quit'
+    }
+
+    Menus.menu(Enums.Layers.INVENTORY, '[color=white]Lua Dungeons', options, 30, screenWidth, screenHeight)
+end
+
+function Menus.messageBox(header, width, screenWidth, screenHeight)
+    Menus.menu(Enums.Layers.INVENTORY, header, {}, width, screenWidth, screenHeight)
+end
