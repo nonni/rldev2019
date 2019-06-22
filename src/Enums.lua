@@ -10,9 +10,10 @@ Enums.States = {
 }
 
 Enums.RenderOrder = {
-    CORPSE = 1,
-    ITEM = 2,
-    ACTOR = 3
+    STAIRS = 1,
+    CORPSE = 2,
+    ITEM = 3,
+    ACTOR = 4
 }
 
 Enums.Layers = {

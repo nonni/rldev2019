@@ -1,9 +1,11 @@
 GameMap = Object:extend()
 
-function GameMap:new(width, height)
+function GameMap:new(width, height, dungeonLevel)
     self.width = width
     self.height = height
     self.tiles = self:initializeTiles()
+
+    self.dungeonLevel = dungeonLevel or 1
 end
 
 function GameMap:initializeTiles()
@@ -21,6 +23,8 @@ end
 function GameMap:makeMap(maxRooms, roomMinSize, roomMaxSize, mapWidth, mapHeight, player, entities, maxMonstersPerRoom, maxItemsPerRoom)
     local rooms = {}
     local numRooms = 0
+
+    local centerOfLastRoom = {}
 
     for _ = 1, maxRooms do
         -- Random width and height
@@ -57,6 +61,9 @@ function GameMap:makeMap(maxRooms, roomMinSize, roomMaxSize, mapWidth, mapHeight
                 -- center coordinate of previous room.
                 local prevCenter = rooms[#rooms]:center()
 
+                centerOfLastRoom.x = prevCenter.x
+                centerOfLastRoom.y = prevCenter.y
+
                 -- flip a coin
                 if randInt(0, 1) == 1 then
                     -- First move horizontally then vertically
@@ -75,6 +82,19 @@ function GameMap:makeMap(maxRooms, roomMinSize, roomMaxSize, mapWidth, mapHeight
             rooms[numRooms] = newRoom
         end
     end
+
+    print (centerOfLastRoom.x..','..centerOfLastRoom.y)
+    local downStairs = Entity(
+        centerOfLastRoom.x,
+        centerOfLastRoom.y,
+        '>',
+        'white',
+        'Stairs',
+        {
+            stairs = Stairs(self.dungeonLevel + 1),
+            renderOrder = Enums.RenderOrder.STAIRS
+        })
+    table.insert(entities, downStairs)
 end
 
 function GameMap:createRoom(room)

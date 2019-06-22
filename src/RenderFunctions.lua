@@ -63,7 +63,7 @@ function RenderFunctions.renderAll(entities, player, gameMap, fovMap, messageLog
     end)
     -- Draw all entities in the list
     for _, v in ipairs(entities) do
-        RenderFunctions.drawEntity(v, fovMap, dy)
+        RenderFunctions.drawEntity(v, fovMap, gameMap, dy)
     end
 
     terminal.layer(Enums.Layers.UI)
@@ -129,8 +129,8 @@ function RenderFunctions.rectangle(layer, color, x, y, w, h, char)
 end
 
 
-function RenderFunctions.drawEntity(entity, fovMap, dy)
-    if fovMap[entity.x..','..entity.y] then
+function RenderFunctions.drawEntity(entity, fovMap, gameMap, dy)
+    if fovMap[entity.x..','..entity.y] or (entity.stairs and gameMap.tiles[entity.y][entity.x].explored) then
         terminal.color(entity.color)
         terminal.print(entity.x - 1, entity.y + dy, entity.char)
     end

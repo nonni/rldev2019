@@ -29,5 +29,6 @@ globals = {
     'ItemFunctions',
     'ConfusedMonster',
     'LoaderFunctions',
-    'Persistence'
+    'Persistence',
+    'Stairs'
 }
