@@ -19,8 +19,11 @@ InputHandler.playerTurnKeyActions = {
     [terminal.TK_G] = {'pickup', true},
     [terminal.TK_I] = {'show_inventory', true},
     [terminal.TK_D] = {'drop_inventory', true},
+    [terminal.TK_C] = {'show_character_screen', true},
+    [terminal.TK_Z] = {'wait', true},
     [terminal.TK_RETURN] = function() return terminal.check(terminal.TK_CONTROL) and {'fullscreen', true} or {'take_stairs', true} end,
-    [terminal.TK_P] = function () return print(Game.player.x..','..Game.player.y) or {} end
+    [terminal.TK_P] = function () return print(Game.player.x..','..Game.player.y) or {} end,
+    [terminal.TK_X] = function () return Game.player.level:addXP(100) or {} end
 }
 
 InputHandler.playerDeadKeyActions = {
@@ -35,6 +38,16 @@ InputHandler.targetingKeyActions = {
     [terminal.TK_MOUSE_LEFT] = function() return {'left_click', {math.floor(terminal.state(terminal.TK_MOUSE_X) + 1), math.floor(terminal.state(terminal.TK_MOUSE_Y) - (Game.screenHeight - Game.mapHeight - 1))}} end,
     [terminal.TK_MOUSE_RIGHT] = function() return {'right_click',  {math.floor(terminal.state(terminal.TK_MOUSE_X) + 1), math.floor(terminal.state(terminal.TK_MOUSE_Y) - (Game.screenHeight - Game.mapHeight - 1))}} end,
     [terminal.TK_CLOSE] = {'exit', true}
+}
+
+InputHandler.handleLevelUpMenu = {
+    [terminal.TK_A] = {'level_up', 'hp'},
+    [terminal.TK_B] = {'level_up', 'str'},
+    [terminal.TK_C] = {'level_up', 'def'}
+}
+
+InputHandler.handleCharacterScreen = {
+    [terminal.TK_ESCAPE] = {'exit', true}
 }
 
 function InputHandler.inventoryKeyActions(key)
@@ -60,6 +73,10 @@ function InputHandler.handleKeys(key, gameState)
         actions = InputHandler.playerDeadKeyActions
     elseif gameState == Enums.States.TARGETING then
         actions = InputHandler.targetingKeyActions
+    elseif gameState == Enums.States.LEVEL_UP then
+        actions = InputHandler.handleLevelUpMenu
+    elseif gameState == Enums.States.CHARACTER_SCREEN then
+        actions = InputHandler.handleCharacterScreen
     elseif gameState == Enums.States.SHOW_INVENTORY or
         gameState == Enums.States.DROP_INVENTORY then
         return InputHandler.inventoryKeyActions(key)

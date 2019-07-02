@@ -30,5 +30,6 @@ globals = {
     'ConfusedMonster',
     'LoaderFunctions',
     'Persistence',
-    'Stairs'
+    'Stairs',
+    'Level'
 }

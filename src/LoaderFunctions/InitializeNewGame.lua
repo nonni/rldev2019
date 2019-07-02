@@ -43,7 +43,8 @@ function LoaderFunctions.initializeGameVariables(gameObject)
 			blocks = true,
 			renderOrder = Enums.RenderOrder.ACTOR,
 			fighter = Fighter(30, 2, 5),
-			inventory = Inventory(26)
+			inventory = Inventory(26),
+			level = Level()
 		}
 	)
 

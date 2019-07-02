@@ -35,6 +35,10 @@ function Entity:new(x, y, char, color, name, opts)
     if self.stairs then
         self.stairs.owner = self
     end
+
+    if self.level then
+        self.level.owner = self
+    end
 end
 
 function Entity:move(dx, dy)

@@ -61,6 +61,35 @@ function Menus.mainMenu(screenWidth, screenHeight)
     Menus.menu(Enums.Layers.INVENTORY, '[color=white]Lua Dungeons', options, 30, screenWidth, screenHeight)
 end
 
+function Menus.levelUpMenu(header, player, menuWidth, screenWidth, screenHeight)
+    local options = {
+        'Constitution (+20HP, from ' .. player.fighter.maxHp .. ')',
+        'Strength (+1 attack, from ' .. player.fighter.power .. ')',
+        'Agility (+1 defense, from ' .. player.fighter.defense .. ')'
+    }
+
+    Menus.menu(Enums.Layers.INVENTORY, header, options, menuWidth, screenWidth, screenHeight)
+end
+
+function Menus.characterScreen(player, characterScreenWidth, characterScreenHeight, screenWidth, screenHeight)
+
+    local x = (screenWidth / 2) - (characterScreenWidth / 2)
+    local y = (screenHeight / 2) - (characterScreenHeight / 2)
+
+    RenderFunctions.rectangle(Enums.Layers.UI_BACK, 'gray', x, y, characterScreenWidth, characterScreenHeight)
+
+    terminal.color('white')
+    terminal.layer(Enums.Layers.INVENTORY)
+    terminal.print(x, y + 1, 'Character Information')
+    terminal.print(x, y + 2, 'Level: ' .. player.level.currentLevel)
+    terminal.print(x, y + 3, 'Experience: ' .. player.level.currentXP)
+    terminal.print(x, y + 4, 'Experience to level: ' .. player.level:experienceToNextLevel())
+    terminal.print(x, y + 6, 'Maximum HP: ' .. player.fighter.maxHp)
+    terminal.print(x, y + 7, 'Attack: ' .. player.fighter.power)
+    terminal.print(x, y + 8, 'Defense: ' .. player.fighter.defense)
+    -- TODO: Center
+end
+
 function Menus.messageBox(header, width, screenWidth, screenHeight)
     Menus.menu(Enums.Layers.INVENTORY, header, {}, width, screenWidth, screenHeight)
 end

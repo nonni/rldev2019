@@ -93,6 +93,12 @@ function LoaderFunctions.RemakeEntity(data)
         stairs = Stairs(data.stairs.floor)
     end
 
+    -- Stairs
+    local level
+    if data.level then
+        level = Level(data.level.currentLevel, data.level.currentXP, data.level.levelUpBase, data.level.levelUpFactor)
+    end
+
     return Entity(
         data.x,
         data.y,
@@ -108,7 +114,8 @@ function LoaderFunctions.RemakeEntity(data)
             ai = ai,
             item = item,
             inventory = inventory,
-            stairs = stairs
+            stairs = stairs,
+            level = level
         }
     )
 end

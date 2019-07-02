@@ -1,10 +1,11 @@
 Fighter = Object:extend()
 
-function Fighter:new(hp, defense, power)
+function Fighter:new(hp, defense, power, xp)
     self.maxHp = hp
     self.hp = hp
     self.defense = defense
     self.power = power
+    self.xp = xp or 0
 end
 
 function Fighter:takeDamage(amount)
@@ -13,6 +14,7 @@ function Fighter:takeDamage(amount)
 
     if self.hp <= 0 then
         results[#results+1] = {'dead', self.owner}
+        results[#results+1] = {'xp', self.xp}
     end
 
     return results

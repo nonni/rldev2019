@@ -107,6 +107,14 @@ function RenderFunctions.renderAll(entities, player, gameMap, fovMap, messageLog
             screenHeight
         )
     end
+
+    if gameState == Enums.States.LEVEL_UP then
+        Menus.levelUpMenu('Level up! Choose a stat to raise:', player, 40, screenWidth, screenHeight)
+    end
+
+    if gameState == Enums.States.CHARACTER_SCREEN then
+        Menus.characterScreen(player, 30, 10, screenWidth, screenHeight)
+    end
 end
 
 -- Clear rectangle from layer

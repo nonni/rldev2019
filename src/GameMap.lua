@@ -153,7 +153,7 @@ function GameMap:placeEntities(room, entities, maxMonstersPerRoom, maxItemsPerRo
                     {
                         blocks = true,
                         renderOrder = Enums.RenderOrder.ACTOR,
-                        fighter = Fighter(10, 0, 3),
+                        fighter = Fighter(10, 0, 3, 35),
                         ai = BasicMonster()
                     }
                 )
@@ -167,7 +167,7 @@ function GameMap:placeEntities(room, entities, maxMonstersPerRoom, maxItemsPerRo
                     {
                         blocks = true,
                         renderOrder = Enums.RenderOrder.ACTOR,
-                        fighter = Fighter(16, 1, 4),
+                        fighter = Fighter(16, 1, 4, 100),
                         ai = BasicMonster()
                     }
                 )

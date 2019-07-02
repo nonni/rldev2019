@@ -36,6 +36,8 @@ function Game.gameloop()
 
 						Game.state = Enums.States.ENEMY_TURN
 					end
+				elseif action[1] == 'wait' then
+					Game.state = Enums.States.ENEMY_TURN
 				elseif action[1] == 'pickup' and Enums.States.PLAYERS_TURN then
 					local itemFound = false
 					for _,entity in ipairs(Game.entities) do
@@ -102,13 +104,29 @@ function Game.gameloop()
 					for _,v in ipairs(useResults) do
 						table.insert(playerTurnResults, v)
 					end
+				elseif action[1] == 'show_character_screen' then
+					Game.previousState = Game.state
+					Game.state = Enums.States.CHARACTER_SCREEN
+				elseif action[1] == 'level_up' and Game.state == Enums.States.LEVEL_UP then
+					if action[2] == 'hp' then
+						Game.player.fighter.maxHp = Game.player.fighter.maxHp + 20
+						Game.player.fighter.hp = Game.player.fighter.hp + 20
+					elseif action[2] == 'str' then
+						Game.player.fighter.power = Game.player.fighter.power + 1
+					elseif action[2] == 'def' then
+						Game.player.fighter.defense = Game.player.fighter.defense + 1
+					end
+					Game.state = Game.previousState
+					RenderFunctions.clearLayer(Enums.Layers.INVENTORY, 0, 0, Game.screenWidth, Game.screenHeight)
+					RenderFunctions.clearLayer(Enums.Layers.UI_BACK, 0, 0, Game.screenWidth, Game.screenHeight)
 				elseif Game.state == Enums.States.TARGETING and action[1] == 'right_click' then
 					table.insert(playerTurnResults, {'targeting_cancelled', true})
 					RenderFunctions.clearLayer(Enums.Layers.INVENTORY, 0, 0, Game.screenWidth, Game.screenHeight)
 					RenderFunctions.clearLayer(Enums.Layers.UI_BACK, 0, 0, Game.screenWidth, Game.screenHeight)
 				elseif action[1] == 'exit' then
 					if Game.state == Enums.States.SHOW_INVENTORY
-						or Game.state == Enums.States.DROP_INVENTORY then
+						or Game.state == Enums.States.DROP_INVENTORY
+						or Game.state == Enums.States.CHARACTER_SCREEN then
 						Game.state = Game.previousState
 						RenderFunctions.clearLayer(Enums.Layers.INVENTORY, 0, 0, Game.screenWidth, Game.screenHeight)
 						RenderFunctions.clearLayer(Enums.Layers.UI_BACK, 0, 0, Game.screenWidth, Game.screenHeight)
@@ -149,6 +167,14 @@ function Game.gameloop()
 						Game.state = Enums.States.ENEMY_TURN
 						RenderFunctions.clearLayer(Enums.Layers.INVENTORY, 0, 0, Game.screenWidth, Game.screenHeight)
 						RenderFunctions.clearLayer(Enums.Layers.UI_BACK, 0, 0, Game.screenWidth, Game.screenHeight)
+					elseif v[1] == 'xp' then
+						local leveledUp = Game.player.level:addXP(v[2])
+						Game.messageLog:addMessage(Message('You gain ' .. v[2] .. ' experience points.'))
+						if leveledUp then
+							Game.messageLog:addMessage(Message('Your battle skills grow stronger! You reached level ' .. Game.player.level.currentLevel .. '!', 'yellow'))
+							Game.previousState = Game.state
+							Game.state = Enums.States.LEVEL_UP
+						end
 					elseif v[1] == 'item_dropped' then
 						table.insert(Game.entities, v[2])
 						Game.state = Enums.States.ENEMY_TURN
