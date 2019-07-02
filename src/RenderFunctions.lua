@@ -70,6 +70,8 @@ function RenderFunctions.renderAll(entities, player, gameMap, fovMap, messageLog
     -- Draw UI
     RenderFunctions.renderBar(1, 1, Game.uiBarWidth, 'HP', player.fighter.hp, player.fighter.maxHp, PALETTE['red'], PALETTE['violet'], 2)
 
+    terminal.print(1, 3, 'Dungeon level: ' .. gameMap.dungeonLevel)
+
     local names = RenderFunctions.getNamesUnderMouse(
         terminal.state(terminal.TK_MOUSE_X),
         terminal.state(terminal.TK_MOUSE_Y) - dy - 1,
