@@ -73,6 +73,30 @@ function Game.gameloop()
 							table.insert(playerTurnResults, v)
 						end
 					end
+				elseif action[1] == 'take_stairs' and Game.state == Enums.States.PLAYERS_TURN then
+					local foundStairs = false
+					for _,v in ipairs(Game.entities) do
+						if v.stairs and v.x == Game.player.x and v.y == Game.player.y then
+							Game.entities = Game.gameMap:nextFloor(
+								Game.maxRooms,
+								Game.roomMinSize,
+								Game.roomMaxSize,
+								Game.mapWidth,
+								Game.mapHeight,
+								Game.player,
+								Game.maxMonstersPerRoom,
+								Game.maxItemsPerRoom,
+								Game.messageLog
+							)
+							Game.fovMap = {}
+							Game.fovRecompute = true
+							foundStairs = true
+							break
+						end
+					end
+					if foundStairs == false then
+						Game.messageLog:addMessage(Message('There are no stairs here.', 'yellow'))
+					end
 				elseif Game.state == Enums.States.TARGETING and action[1] == 'left_click' then
 					local useResults = Game.player.inventory:use(Game.targetingItem, {entities = Game.entities, fov_map = Game.fovMap, target_x = action[2][1], target_y = action[2][2]})
 					for _,v in ipairs(useResults) do

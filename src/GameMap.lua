@@ -83,7 +83,7 @@ function GameMap:makeMap(maxRooms, roomMinSize, roomMaxSize, mapWidth, mapHeight
         end
     end
 
-    print (centerOfLastRoom.x..','..centerOfLastRoom.y)
+    print('Stairs: '..centerOfLastRoom.x..','..centerOfLastRoom.y)
     local downStairs = Entity(
         centerOfLastRoom.x,
         centerOfLastRoom.y,
@@ -256,4 +256,15 @@ function GameMap:isBlocked(x, y)
         return true
     end
     return false
+end
+
+function GameMap:nextFloor(maxRooms, roomMinSize, roomMaxSize, mapWidth, mapHeight, player, maxMonstersPerRoom, maxItemsPerRoom, messageLog)
+    self.dungeonLevel = self.dungeonLevel + 1
+    local entities = {}
+    table.insert(entities, player)
+    self.tiles = self:initializeTiles()
+    self:makeMap(maxRooms, roomMinSize, roomMaxSize, mapWidth, mapHeight, player, entities, maxMonstersPerRoom, maxItemsPerRoom)
+    player.fighter:heal(player.fighter.maxHp / 2)
+    messageLog:addMessage(Message('You take a moment to rest, and recover your strength.', 'violet'))
+    return entities
 end

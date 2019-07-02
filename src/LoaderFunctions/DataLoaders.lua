@@ -87,6 +87,12 @@ function LoaderFunctions.RemakeEntity(data)
         end
     end
 
+    -- Stairs
+    local stairs
+    if data.stairs then
+        stairs = Stairs(data.stairs.floor)
+    end
+
     return Entity(
         data.x,
         data.y,
@@ -101,7 +107,8 @@ function LoaderFunctions.RemakeEntity(data)
             fighter = fighter,
             ai = ai,
             item = item,
-            inventory = inventory
+            inventory = inventory,
+            stairs = stairs
         }
     )
 end

@@ -19,7 +19,7 @@ InputHandler.playerTurnKeyActions = {
     [terminal.TK_G] = {'pickup', true},
     [terminal.TK_I] = {'show_inventory', true},
     [terminal.TK_D] = {'drop_inventory', true},
-    [terminal.TK_RETURN] = function() return terminal.check(terminal.TK_CONTROL) and {'fullscreen', true} or {} end,
+    [terminal.TK_RETURN] = function() return terminal.check(terminal.TK_CONTROL) and {'fullscreen', true} or {'take_stairs', true} end,
     [terminal.TK_P] = function () return print(Game.player.x..','..Game.player.y) or {} end
 }
 
